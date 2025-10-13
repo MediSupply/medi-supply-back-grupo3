@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from enum import Enum
 from decimal import Decimal
+from enum import Enum
 
 
 class CategoriaDto(Enum):
@@ -17,6 +17,7 @@ class ProductoDto:
     """
     DTO que representa un producto.
     """
+
     id: str
     nombre: str
     descripcion: str

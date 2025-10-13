@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class Role(Enum):
     ADMIN = "admin"
-    USER = "user"   
+    USER = "user"
 
 
 @dataclass(frozen=True)
@@ -13,12 +13,13 @@ class User:
     """
     Entidad del dominio que representa el usuario.
     """
+
     id: str
     name: str
     email: str
     password: str
     role: Role
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convierte la entidad a diccionario."""
         return {

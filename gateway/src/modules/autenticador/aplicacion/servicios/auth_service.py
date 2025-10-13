@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
-from modules.autenticador.dominio.entities.session import Session
-from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
-from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
-from modules.autenticador.dominio.entities.user import User, Role
-from modules.autenticador.dominio.repositorios.auth_repository import AuthRepository
+
 import jwt
+from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
+from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
+from modules.autenticador.dominio.entities.session import Session
+from modules.autenticador.dominio.entities.user import Role, User
+from modules.autenticador.dominio.repositorios.auth_repository import AuthRepository
 
 user = User(
     id="1",
@@ -24,6 +25,7 @@ admin = User(
 
 users = [user, admin]
 
+
 class AuthService:
     def __init__(self, auth_repository: AuthRepository, secret_key: str, algorithm: str):
         self.secret_key = secret_key
@@ -36,9 +38,7 @@ class AuthService:
             if auth:
                 exp = datetime.now() + timedelta(hours=1)
                 token = jwt.encode(
-                    {"user_id": auth.id, "role": auth.role.value, "exp": exp},
-                    key=self.secret_key,
-                    algorithm=self.algorithm
+                    {"user_id": auth.id, "role": auth.role.value, "exp": exp}, key=self.secret_key, algorithm=self.algorithm
                 )
                 session = Session(
                     id=auth.id,
@@ -47,7 +47,7 @@ class AuthService:
                     expires_at=exp,
                 )
                 return SessionMapper.entity_to_dto(session)
-            else:   
-                return None 
+            else:
+                return None
         except Exception as e:
             return None

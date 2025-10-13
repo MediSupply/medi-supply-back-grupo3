@@ -1,6 +1,7 @@
 from modules.health.dominio.entities import Health
 from modules.health.dominio.repositorios import HealthRepository
 
+
 class HealthRepositoryImpl(HealthRepository):
 
     def __init__(self):

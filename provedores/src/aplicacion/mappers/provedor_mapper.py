@@ -1,10 +1,10 @@
-from src.dominio.entities.provedor import Provedor, Pais
-from src.aplicacion.dtos.provedor_dto import ProvedorDto, PaisDto
+from src.aplicacion.dtos.provedor_dto import PaisDto, ProvedorDto
+from src.dominio.entities.provedor import Pais, Provedor
 
 
 class ProvedorMapper:
     """Mapper para convertir entre entidades y DTOs de proveedores."""
-    
+
     @staticmethod
     def entity_to_dto(provedor: Provedor) -> ProvedorDto:
         """Convierte una entidad Provedor a ProvedorDto."""
@@ -15,9 +15,9 @@ class ProvedorMapper:
             pais=PaisDto(provedor.pais.value),
             direccion=provedor.direccion,
             telefono=provedor.telefono,
-            email=provedor.email
+            email=provedor.email,
         )
-    
+
     @staticmethod
     def dto_to_entity(provedor_dto: ProvedorDto) -> Provedor:
         """Convierte un ProvedorDto a entidad Provedor."""
@@ -28,14 +28,14 @@ class ProvedorMapper:
             pais=Pais(provedor_dto.pais.value),
             direccion=provedor_dto.direccion,
             telefono=provedor_dto.telefono,
-            email=provedor_dto.email
+            email=provedor_dto.email,
         )
-    
+
     @staticmethod
     def entities_to_dtos(provedores: list[Provedor]) -> list[ProvedorDto]:
         """Convierte una lista de entidades Provedor a lista de ProvedorDto."""
         return [ProvedorMapper.entity_to_dto(provedor) for provedor in provedores]
-    
+
     @staticmethod
     def dto_to_dict(provedor_dto: ProvedorDto) -> dict:
         """Convierte un ProvedorDto a diccionario para serialización JSON."""
@@ -46,9 +46,9 @@ class ProvedorMapper:
             "pais": provedor_dto.pais.value,
             "direccion": provedor_dto.direccion,
             "telefono": provedor_dto.telefono,
-            "email": provedor_dto.email
+            "email": provedor_dto.email,
         }
-    
+
     @staticmethod
     def dtos_to_dicts(provedores_dto: list[ProvedorDto]) -> list[dict]:
         """Convierte una lista de ProvedorDto a lista de diccionarios para serialización JSON."""

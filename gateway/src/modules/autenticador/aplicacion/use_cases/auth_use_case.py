@@ -1,5 +1,6 @@
-from modules.autenticador.aplicacion.servicios.auth_service import AuthService
 from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
+from modules.autenticador.aplicacion.servicios.auth_service import AuthService
+
 
 class AuthUseCase:
     def __init__(self, auth_service: AuthService):

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class Pais(Enum):
@@ -23,6 +23,7 @@ class Provedor:
     """
     Entidad del dominio que representa un proveedor.
     """
+
     id: int
     nit: int
     nombre: str
@@ -30,7 +31,7 @@ class Provedor:
     direccion: str
     telefono: int
     email: str
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convierte la entidad a diccionario."""
         return {

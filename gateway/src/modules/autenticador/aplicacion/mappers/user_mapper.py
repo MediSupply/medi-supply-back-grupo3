@@ -1,6 +1,8 @@
-from typing import Dict, Any
-from modules.autenticador.dominio.entities.user import User, Role
-from modules.autenticador.aplicacion.dtos.user_dto import UserDto, RoleDto
+from typing import Any, Dict
+
+from modules.autenticador.aplicacion.dtos.user_dto import RoleDto, UserDto
+from modules.autenticador.dominio.entities.user import Role, User
+
 
 class UserMapper:
     @staticmethod
@@ -12,8 +14,8 @@ class UserMapper:
             password=user["password"],
             role=RoleDto(user["role"]),
             token=user["token"],
-        )   
-    
+        )
+
     @staticmethod
     def dto_to_json(user_dto: UserDto) -> Dict[str, Any]:
         return {
@@ -24,7 +26,7 @@ class UserMapper:
             "role": user_dto.role.value,
             "token": user_dto.token,
         }
-    
+
     @staticmethod
     def dto_to_entity(user_dto: UserDto) -> User:
         role = Role(user_dto.role.value)
@@ -36,7 +38,7 @@ class UserMapper:
             role=role,
             token=user_dto.token,
         )
-    
+
     @staticmethod
     def entity_to_dto(user: User) -> UserDto:
         role = RoleDto(user.role.value)
@@ -48,4 +50,3 @@ class UserMapper:
             role=role,
             token=user.token,
         )
-    

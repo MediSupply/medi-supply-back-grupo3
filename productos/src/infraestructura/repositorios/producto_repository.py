@@ -1,12 +1,13 @@
-from typing import List, Optional
 from decimal import Decimal
-from src.dominio.entities.producto import Producto, Categoria
+from typing import List, Optional
+
+from src.dominio.entities.producto import Categoria, Producto
 from src.dominio.repositorios.producto_repository import ProductoRepository
 
 
 class ProductoRepositoryImpl(ProductoRepository):
     """Implementación del repositorio de productos con datos en memoria."""
-    
+
     def __init__(self):
         # Datos de ejemplo en memoria
         self._productos = [
@@ -17,7 +18,7 @@ class ProductoRepositoryImpl(ProductoRepository):
                 precio=Decimal("999.99"),
                 categoria=Categoria.ELECTRONICOS,
                 stock=50,
-                activo=True
+                activo=True,
             ),
             Producto(
                 id="2",
@@ -26,7 +27,7 @@ class ProductoRepositoryImpl(ProductoRepository):
                 precio=Decimal("899.99"),
                 categoria=Categoria.ELECTRONICOS,
                 stock=30,
-                activo=True
+                activo=True,
             ),
             Producto(
                 id="3",
@@ -35,7 +36,7 @@ class ProductoRepositoryImpl(ProductoRepository):
                 precio=Decimal("29.99"),
                 categoria=Categoria.ROPA,
                 stock=100,
-                activo=True
+                activo=True,
             ),
             Producto(
                 id="4",
@@ -44,7 +45,7 @@ class ProductoRepositoryImpl(ProductoRepository):
                 precio=Decimal("599.99"),
                 categoria=Categoria.HOGAR,
                 stock=10,
-                activo=True
+                activo=True,
             ),
             Producto(
                 id="5",
@@ -53,7 +54,7 @@ class ProductoRepositoryImpl(ProductoRepository):
                 precio=Decimal("24.99"),
                 categoria=Categoria.DEPORTES,
                 stock=75,
-                activo=True
+                activo=True,
             ),
             Producto(
                 id="6",
@@ -62,25 +63,25 @@ class ProductoRepositoryImpl(ProductoRepository):
                 precio=Decimal("39.99"),
                 categoria=Categoria.LIBROS,
                 stock=25,
-                activo=True
-            )
+                activo=True,
+            ),
         ]
-    
+
     def obtener_todos(self) -> List[Producto]:
         """Obtiene todos los productos."""
         return self._productos.copy()
-    
+
     def obtener_por_id(self, producto_id: str) -> Optional[Producto]:
         """Obtiene un producto por su ID."""
         for producto in self._productos:
             if producto.id == producto_id:
                 return producto
         return None
-    
+
     def obtener_por_categoria(self, categoria: str) -> List[Producto]:
         """Obtiene productos por categoría."""
         return [p for p in self._productos if p.categoria.value == categoria]
-    
+
     def buscar_por_nombre(self, nombre: str) -> List[Producto]:
         """Busca productos por nombre."""
         nombre_lower = nombre.lower()

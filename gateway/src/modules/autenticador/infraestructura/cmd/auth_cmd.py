@@ -1,6 +1,7 @@
+from flask import Response, jsonify
 from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
 from modules.autenticador.aplicacion.use_cases.auth_use_case import AuthUseCase
-from flask import Response, jsonify
+
 
 class AuthCmd:
     def __init__(self, auth_use_case: AuthUseCase):

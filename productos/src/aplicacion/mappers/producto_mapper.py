@@ -1,7 +1,8 @@
-from typing import Dict, Any
 from decimal import Decimal
-from src.dominio.entities.producto import Producto, Categoria
-from src.aplicacion.dtos.producto_dto import ProductoDto, CategoriaDto
+from typing import Any, Dict
+
+from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
+from src.dominio.entities.producto import Categoria, Producto
 
 
 class ProductoMapper:
@@ -15,8 +16,8 @@ class ProductoMapper:
             categoria=CategoriaDto(producto["categoria"]),
             stock=producto["stock"],
             activo=producto.get("activo", True),
-        )   
-    
+        )
+
     @staticmethod
     def dto_to_json(producto_dto: ProductoDto) -> Dict[str, Any]:
         return {
@@ -28,7 +29,7 @@ class ProductoMapper:
             "stock": producto_dto.stock,
             "activo": producto_dto.activo,
         }
-    
+
     @staticmethod
     def dto_to_entity(producto_dto: ProductoDto) -> Producto:
         categoria = Categoria(producto_dto.categoria.value)
@@ -41,7 +42,7 @@ class ProductoMapper:
             stock=producto_dto.stock,
             activo=producto_dto.activo,
         )
-    
+
     @staticmethod
     def entity_to_dto(producto: Producto) -> ProductoDto:
         categoria = CategoriaDto(producto.categoria.value)

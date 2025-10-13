@@ -1,6 +1,7 @@
+from flask import Response, jsonify
 from modules.health.aplicacion import HealthUseCase
 from modules.health.dominio.entities import Health
-from flask import Response, jsonify
+
 
 class HealthCmd:
     def __init__(self, health_use_case: HealthUseCase):

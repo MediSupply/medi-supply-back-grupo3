@@ -6,6 +6,7 @@ from typing import Optional
 @dataclass
 class TokenDto:
     """DTO para transferir información de tokens."""
+
     id: str
     user_id: str
     token_value: str
@@ -19,6 +20,7 @@ class TokenDto:
 @dataclass
 class AuthorizationRequestDto:
     """DTO para solicitudes de autorización."""
+
     token: str
     resource: str
     action: str
@@ -27,6 +29,7 @@ class AuthorizationRequestDto:
 @dataclass
 class AuthorizationResponseDto:
     """DTO para respuestas de autorización."""
+
     authorized: bool
     user_id: str
     user_role: str

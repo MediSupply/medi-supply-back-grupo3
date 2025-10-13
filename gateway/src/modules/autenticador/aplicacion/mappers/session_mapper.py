@@ -1,6 +1,8 @@
 from typing import Any, Dict
+
 from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 from modules.autenticador.dominio.entities.session import Session
+
 
 class SessionMapper:
     @staticmethod
@@ -11,7 +13,7 @@ class SessionMapper:
             token=session.token,
             expires_at=session.expires_at,
         )
-    
+
     @staticmethod
     def dto_to_entity(session_dto: SessionDto) -> Session:
         return Session(
@@ -20,7 +22,7 @@ class SessionMapper:
             token=session_dto.token,
             expires_at=session_dto.expires_at,
         )
-    
+
     @staticmethod
     def dto_to_json(session_dto: SessionDto) -> Dict[str, Any]:
         return {
@@ -29,7 +31,7 @@ class SessionMapper:
             "token": session_dto.token,
             "expires_at": session_dto.expires_at,
         }
-    
+
     @staticmethod
     def json_to_dto(json: Dict[str, Any]) -> SessionDto:
         return SessionDto(

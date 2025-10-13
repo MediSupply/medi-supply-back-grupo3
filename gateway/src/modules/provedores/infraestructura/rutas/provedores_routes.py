@@ -1,6 +1,8 @@
-import requests
-from flask import Blueprint, request, jsonify
 import os
+
+import requests
+from flask import Blueprint, jsonify, request
+
 
 def create_provedores_routes() -> Blueprint:
     """
@@ -29,10 +31,7 @@ def create_provedores_routes() -> Blueprint:
             return response.json(), response.status_code
 
         except requests.exceptions.RequestException as e:
-            return jsonify({
-                "success": False,
-                "error": f"Error conectando con el servicio de provedores: {str(e)}"
-            }), 503
+            return jsonify({"success": False, "error": f"Error conectando con el servicio de provedores: {str(e)}"}), 503
 
     @provedores_routes.route("", methods=["GET"])
     def obtener_todos_los_provedores():

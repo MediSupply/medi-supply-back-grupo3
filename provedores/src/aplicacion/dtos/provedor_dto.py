@@ -22,6 +22,7 @@ class ProvedorDto:
     """
     DTO que representa un proveedor.
     """
+
     id: int
     nit: int
     nombre: str

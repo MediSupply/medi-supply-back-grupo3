@@ -1,5 +1,3 @@
 from .health_repository import HealthRepositoryImpl
 
-__all__ = [
-    "HealthRepositoryImpl"
-]
+__all__ = ["HealthRepositoryImpl"]

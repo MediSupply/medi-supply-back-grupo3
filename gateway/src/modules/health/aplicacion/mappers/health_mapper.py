@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import Dict, Any
-from modules.health.dominio.entities.health import Health
+from typing import Any, Dict
+
 from modules.health.aplicacion.dtos.health_dto import HealthDto
+from modules.health.dominio.entities.health import Health
+
 
 class HealthMapper:
     @staticmethod
@@ -11,7 +13,7 @@ class HealthMapper:
             timestamp=datetime.fromisoformat(health["timestamp"]),
             version=health["version"],
         )
-    
+
     @staticmethod
     def dto_to_json(health_dto: HealthDto) -> Dict[str, Any]:
         return {
@@ -27,7 +29,7 @@ class HealthMapper:
             timestamp=health_dto.timestamp,
             version=health_dto.version,
         )
-    
+
     @staticmethod
     def entity_to_dto(health: Health) -> HealthDto:
         return HealthDto(
