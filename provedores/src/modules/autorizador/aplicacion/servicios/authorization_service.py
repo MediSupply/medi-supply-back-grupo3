@@ -144,5 +144,5 @@ class AuthorizationService:
         try:
             token_payload = self.validate_token(authorization_header)
             return self.access_validator.get_user_permissions(token_payload)
-        except:
+        except Exception:
             return None

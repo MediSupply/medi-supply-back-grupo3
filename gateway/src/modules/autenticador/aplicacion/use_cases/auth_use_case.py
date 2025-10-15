@@ -12,3 +12,11 @@ class AuthUseCase:
             return user
         else:
             return None
+
+    def signUp(self, name: str, email: str, password: str, role: str = "USER") -> SessionDto:
+        """Sign up a new user"""
+        return self.auth_service.signUp(name, email, password, role)
+
+    def signOut(self) -> SessionDto:
+        """Sign out the current user"""
+        return self.auth_service.signOut()

@@ -26,7 +26,7 @@ class Health:
         """Factory method para crear un estado saludable."""
         return cls(
             status="healthy",
-            timestamp=datetime.now().isoformat(),
+            timestamp=datetime.now(),
             version=version,
         )
 
@@ -35,6 +35,6 @@ class Health:
         """Factory method para crear un estado no saludable."""
         return cls(
             status="unhealthy",
-            timestamp=datetime.now().isoformat(),
+            timestamp=datetime.now(),
             version=version,
         )

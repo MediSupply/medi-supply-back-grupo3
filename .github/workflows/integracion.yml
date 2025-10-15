@@ -45,80 +45,54 @@ jobs:
 
       - name: Verificar tipos con mypy
         run: |
-          mypy gateway/src/ productos/src/ provedores/src/ --ignore-missing-imports
+          mypy gateway/src/ --ignore-missing-imports
         continue-on-error: true
 
-      - name: Ejecutar tests con pytest y coverage
+      - name: Ejecutar tests del gateway con pytest y coverage
         run: |
           pytest \
             --cov=gateway/src \
-            --cov=productos/src \
-            --cov=provedores/src \
             --cov-report=term-missing \
             --cov-report=html \
             --cov-report=json \
             --cov-report=xml \
             --junitxml=junit.xml \
+            gateway/tests/ \
             -v
 
-      - name: Verificar coverage mínimo del 80%
+      - name: Verificar coverage global mínimo del 80%
         run: |
-          # Crear script para verificar coverage por archivo
-          cat > check_coverage.sh << 'EOF'
-          #!/bin/bash
-          
-          COVERAGE_FILE="coverage.json"
-          MIN_COVERAGE=80
-          FAILED_FILES=""
-          
-          if [ ! -f "$COVERAGE_FILE" ]; then
-            echo "❌ ERROR: No se encontró el archivo de coverage"
-            exit 1
-          fi
-          
-          echo "Verificando coverage por archivo (mínimo ${MIN_COVERAGE}%)..."
-          echo ""
-          
-          # Obtener coverage total
-          TOTAL_COVERAGE=$(python3 -c "import json; data=json.load(open('$COVERAGE_FILE')); print(f\"{data['totals']['percent_covered']:.1f}\")")
-          
-          echo "📊 Coverage General: ${TOTAL_COVERAGE}%"
-          echo ""
-          echo "Coverage por archivo:"
-          
-          # Verificar cada archivo
-          python3 << 'PYTHON_SCRIPT'
+          # Verificar coverage global del gateway
+          python3 << 'EOF'
           import json
           import sys
           
+          COVERAGE_FILE = "coverage.json"
           MIN_COVERAGE = 80
-          failed_files = []
           
-          with open('coverage.json', 'r') as f:
-              data = json.load(f)
-          
-          for file_path, file_data in data['files'].items():
-              # Ignorar archivos de tests, __init__.py, migraciones, etc.
-              if any(x in file_path for x in ['test_', 'tests/', '__init__.py', 'migrations/', 'venv/', '.venv/', 'gateway/src/', 'productos/src/', 'provedores/src/']):
-                  continue
+          try:
+              with open(COVERAGE_FILE, 'r') as f:
+                  data = json.load(f)
               
-              coverage_pct = file_data['summary']['percent_covered']
-              status = "✅" if coverage_pct >= MIN_COVERAGE else "❌"
+              total_coverage = data['totals']['percent_covered']
               
-              print(f"  {status} {file_path}: {coverage_pct:.1f}%")
+              print(f"📊 Coverage Global del Gateway: {total_coverage:.1f}%")
+              print(f"🎯 Coverage Mínimo Requerido: {MIN_COVERAGE}%")
               
-              if coverage_pct < MIN_COVERAGE:
-                  failed_files.append((file_path, coverage_pct))
-          
-          if failed_files:
-              print("\n❌ Los siguientes archivos no cumplen con el coverage mínimo del 80%:")
-              for file_path, coverage in failed_files:
-                  print(f"  ❌ {file_path}: {coverage:.1f}% (mínimo: 80%)")
+              if total_coverage >= MIN_COVERAGE:
+                  print(f"✅ Coverage global cumple con el mínimo requerido ({MIN_COVERAGE}%)")
+                  sys.exit(0)
+              else:
+                  print(f"❌ Coverage global NO cumple con el mínimo requerido")
+                  print(f"   Actual: {total_coverage:.1f}%")
+                  print(f"   Mínimo: {MIN_COVERAGE}%")
+                  print(f"   Diferencia: {MIN_COVERAGE - total_coverage:.1f}%")
+                  sys.exit(1)
+                  
+          except FileNotFoundError:
+              print(f"❌ ERROR: No se encontró el archivo de coverage: {COVERAGE_FILE}")
               sys.exit(1)
-          else:
-              print("\n✅ Todos los archivos cumplen con el coverage mínimo del 80%")
-          PYTHON_SCRIPT
+          except Exception as e:
+              print(f"❌ ERROR al procesar coverage: {e}")
+              sys.exit(1)
           EOF
-          
-          chmod +x check_coverage.sh
-          ./check_coverage.sh

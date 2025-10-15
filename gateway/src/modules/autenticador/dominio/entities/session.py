@@ -10,7 +10,6 @@ class Session:
     token: str
     expires_at: datetime
 
-    @staticmethod
     def to_dict(self) -> Dict[str, Any]:
         return {
             "id": self.id,

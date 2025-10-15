@@ -22,4 +22,19 @@ def create_auth_routes(auth_controller: AuthCmd) -> Blueprint:
         password = data.get("password")
         return auth_controller.login(email, password)
 
+    @auth_bp.route("/signup", methods=["POST"])
+    def signup():
+        """Endpoint para registrarse."""
+        data = request.get_json()
+        name = data.get("name")
+        email = data.get("email")
+        password = data.get("password")
+        role = data.get("role", "USER")
+        return auth_controller.signUp(name, email, password, role)
+
+    @auth_bp.route("/signout", methods=["POST"])
+    def signout():
+        """Endpoint para cerrar sesión."""
+        return auth_controller.signOut()
+
     return auth_bp

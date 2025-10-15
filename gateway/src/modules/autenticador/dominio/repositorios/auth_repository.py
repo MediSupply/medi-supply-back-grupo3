@@ -6,3 +6,9 @@ from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 class AuthRepository(ABC):
     @abstractmethod
     def login(self, email: str, password: str) -> SessionDto: ...
+
+    @abstractmethod
+    def signUp(self, name: str, email: str, password: str, role: str = "USER") -> SessionDto: ...
+
+    @abstractmethod
+    def signOut(self) -> SessionDto: ...

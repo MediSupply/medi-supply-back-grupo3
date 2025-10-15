@@ -1,29 +1,5 @@
-from datetime import datetime, timedelta
-
-import jwt
 from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
-from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
-from modules.autenticador.dominio.entities.session import Session
-from modules.autenticador.dominio.entities.user import Role, User
 from modules.autenticador.dominio.repositorios.auth_repository import AuthRepository
-
-user = User(
-    id="1",
-    name="John Doe",
-    email="john.doe@example.com",
-    password="User1234*",
-    role=Role.USER,
-)
-
-admin = User(
-    id="2",
-    name="Admin Doe",
-    email="admin.doe@example.com",
-    password="Admin1234*",
-    role=Role.ADMIN,
-)
-
-users = [user, admin]
 
 
 class AuthService:
@@ -33,21 +9,13 @@ class AuthService:
         self.auth_repository = auth_repository
 
     def login(self, email: str, password: str) -> SessionDto:
-        try:
-            auth = next((user for user in users if user.email == email and user.password == password), None)
-            if auth:
-                exp = datetime.now() + timedelta(hours=1)
-                token = jwt.encode(
-                    {"user_id": auth.id, "role": auth.role.value, "exp": exp}, key=self.secret_key, algorithm=self.algorithm
-                )
-                session = Session(
-                    id=auth.id,
-                    user_id=auth.id,
-                    token=token,
-                    expires_at=exp,
-                )
-                return SessionMapper.entity_to_dto(session)
-            else:
-                return None
-        except Exception as e:
-            return None
+        """Login using the repository to query the database"""
+        return self.auth_repository.login(email, password)
+
+    def signUp(self, name: str, email: str, password: str, role: str = "USER") -> SessionDto:
+        """Sign up a new user using the repository"""
+        return self.auth_repository.signUp(name, email, password, role)
+
+    def signOut(self) -> SessionDto:
+        """Sign out the current user"""
+        return self.auth_repository.signOut()
