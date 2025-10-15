@@ -4,8 +4,8 @@ from typing import Any, Dict
 
 
 class Role(Enum):
-    ADMIN = "admin"
-    USER = "user"
+    ADMIN = "ADMIN"
+    USER = "USER"
 
 
 @dataclass(frozen=True)

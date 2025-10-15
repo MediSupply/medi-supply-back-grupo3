@@ -49,7 +49,7 @@ def create_application():
         return app
 
     except Exception as e:
-        logger.error(f"Failed to initialize API Gateway: {str(e)}")
+        logging.error(f"Failed to initialize API Gateway: {str(e)}")
         raise
 
 

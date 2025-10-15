@@ -1,6 +1,6 @@
 import logging
 import os
-from datetime import datetime, time
+from datetime import datetime
 
 from dotenv import load_dotenv
 from flask import Flask, g, request
@@ -17,6 +17,8 @@ from modules.health.infraestructura.rutas.health_routes import create_health_rou
 from modules.productos.infraestructura.rutas.producto_routes import create_producto_routes
 from modules.provedores.infraestructura.rutas.provedores_routes import create_provedores_routes
 
+from .db import db, init_db
+
 load_dotenv(".env")
 
 
@@ -28,6 +30,9 @@ class Config:
 
     def __init__(self):
         self.app = None
+
+    def _import_models(self):
+        import modules.autenticador.infraestructura.dto
 
     def create_app(self) -> Flask:
         """
@@ -43,6 +48,9 @@ class Config:
 
         # Configurar logging de requests
         self._configure_request_logging()
+
+        # Configurar base de datos
+        self._configure_db()
 
         # Configurar servicios externos para health check
         self._configure_external_services()
@@ -66,6 +74,14 @@ class Config:
         self.app.config["ALGORITHM"] = os.getenv("ALGORITHM", "HS256")
         self.app.config["PRODUCTOS_SERVICE_URL"] = os.getenv("PRODUCTOS_SERVICE_URL", "http://127.0.0.1:5001")
         self.app.config["PROVEDORES_SERVICE_URL"] = os.getenv("PROVEDORES_SERVICE_URL", "http://127.0.0.1:5003")
+        self.app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///app.db")
+        self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    def _configure_db(self):
+        init_db(self.app)
+        self._import_models()
+        with self.app.app_context():
+            db.create_all()
 
     def _configure_request_logging(self):
         """Configura el middleware para logging de requests y responses."""

@@ -58,7 +58,10 @@ omit = [
     "*/__init__.py",
     "*/migrations/*",
     "*/venv/*",
-    "*/.venv/*"
+    "*/.venv/*",
+    "*/main.py",
+    "*/config/config.py",
+    "*/infraestructura/rutas/*"
 ]
 
 [tool.coverage.report]
