@@ -12,3 +12,6 @@ class AuthRepository(ABC):
 
     @abstractmethod
     def signOut(self) -> SessionDto: ...
+
+    @abstractmethod
+    def user_exists(self, email: str) -> bool: ...

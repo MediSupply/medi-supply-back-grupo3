@@ -20,3 +20,7 @@ class AuthUseCase:
     def signOut(self) -> SessionDto:
         """Sign out the current user"""
         return self.auth_service.signOut()
+
+    def user_exists(self, email: str) -> bool:
+        """Check if a user with the given email already exists"""
+        return self.auth_service.user_exists(email)

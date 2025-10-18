@@ -101,3 +101,12 @@ class AuthRepositoryImpl(AuthRepository):
         except Exception as e:
             print(f"Error in signOut: {e}")
             return None
+
+    def user_exists(self, email: str) -> bool:
+        """Check if a user with the given email already exists"""
+        try:
+            existing_user = db.session.query(UserModel).filter_by(email=email).first()
+            return existing_user is not None
+        except Exception as e:
+            print(f"Error checking if user exists: {e}")
+            return False

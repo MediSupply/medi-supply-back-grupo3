@@ -4,6 +4,7 @@ from datetime import datetime
 
 from dotenv import load_dotenv
 from flask import Flask, g, request
+from flask_cors import CORS
 from modules.autenticador.aplicacion.servicios.auth_service import AuthService
 from modules.autenticador.aplicacion.use_cases.auth_use_case import AuthUseCase
 from modules.autenticador.infraestructura.cmd.auth_cmd import AuthCmd
@@ -49,6 +50,9 @@ class Config:
         # Configurar logging de requests
         self._configure_request_logging()
 
+        # Configurar CORS
+        self._configure_cors()
+
         # Configurar base de datos
         self._configure_db()
 
@@ -76,6 +80,14 @@ class Config:
         self.app.config["PROVEDORES_SERVICE_URL"] = os.getenv("PROVEDORES_SERVICE_URL", "http://127.0.0.1:5003")
         self.app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///app.db")
         self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    def _configure_cors(self):
+        """Configura CORS para permitir peticiones desde el frontend."""
+        CORS(self.app, 
+             origins=["http://localhost:4200", "http://127.0.0.1:4200"],
+             methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+             allow_headers=["Content-Type", "Authorization"],
+             supports_credentials=True)
 
     def _configure_db(self):
         init_db(self.app)
