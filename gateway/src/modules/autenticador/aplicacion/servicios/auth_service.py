@@ -1,3 +1,4 @@
+from modules.autenticador.aplicacion.dtos.login_result_dto import LoginResultDto
 from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 from modules.autenticador.dominio.repositorios.auth_repository import AuthRepository
 
@@ -8,7 +9,7 @@ class AuthService:
         self.algorithm = algorithm
         self.auth_repository = auth_repository
 
-    def login(self, email: str, password: str) -> SessionDto:
+    def login(self, email: str, password: str) -> LoginResultDto:
         """Login using the repository to query the database"""
         return self.auth_repository.login(email, password)
 

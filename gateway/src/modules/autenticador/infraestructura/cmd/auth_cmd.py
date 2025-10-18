@@ -9,11 +9,22 @@ class AuthCmd:
 
     def login(self, email: str, password: str) -> Response:
         try:
-            session = self.auth_use_case.execute(email, password)
-            if session:
-                return jsonify(SessionMapper.dto_to_json(session)), 200
-            else:
+            login_result = self.auth_use_case.execute(email, password)
+            
+            # Usuario no encontrado
+            if login_result.user_not_found:
+                return jsonify({"error": "Usuario no encontrado"}), 404
+            
+            # Credenciales incorrectas
+            if login_result.invalid_credentials:
                 return jsonify({"error": "Credenciales inválidas"}), 401
+            
+            # Login exitoso
+            if login_result.session:
+                return jsonify(SessionMapper.dto_to_json(login_result.session)), 200
+            else:
+                return jsonify({"error": "Error al iniciar sesión"}), 500
+                
         except Exception as e:
             return jsonify({"error": "Error al iniciar sesión"}), 500
 
