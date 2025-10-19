@@ -50,10 +50,13 @@ class TestAuthRepositoryImpl:
         result = repo.login("test@example.com", "password123")
 
         assert result is not None
-        assert result.id == "user-id"
-        assert result.user_id == "user-id"
-        assert result.token is not None
-        assert result.expires_at is not None
+        assert result.session is not None
+        assert result.session.id == "user-id"
+        assert result.session.user_id == "user-id"
+        assert result.session.token is not None
+        assert result.session.expires_at is not None
+        assert result.user_not_found is False
+        assert result.invalid_credentials is False
 
     @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
     def test_auth_repository_login_wrong_password(self, mock_db):
@@ -79,7 +82,10 @@ class TestAuthRepositoryImpl:
         # Test login con contraseña incorrecta
         result = repo.login("test@example.com", "wrong_password")
 
-        assert result is None
+        assert result is not None
+        assert result.session is None
+        assert result.user_not_found is False
+        assert result.invalid_credentials is True
 
     @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
     def test_auth_repository_login_user_not_found(self, mock_db):
@@ -97,7 +103,10 @@ class TestAuthRepositoryImpl:
         # Test login con usuario inexistente
         result = repo.login("nonexistent@example.com", "password123")
 
-        assert result is None
+        assert result is not None
+        assert result.session is None
+        assert result.user_not_found is True
+        assert result.invalid_credentials is False
 
     @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
     @patch("modules.autenticador.infraestructura.repositorios.auth_repository.uuid")
@@ -212,7 +221,10 @@ class TestAuthRepositoryImpl:
         # Test login con excepción
         result = repo.login("test@example.com", "password123")
 
-        assert result is None
+        assert result is not None
+        assert result.session is None
+        assert result.user_not_found is False
+        assert result.invalid_credentials is True
 
     @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
     @patch("modules.autenticador.infraestructura.repositorios.auth_repository.uuid")

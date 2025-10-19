@@ -1,3 +1,4 @@
+from modules.autenticador.aplicacion.dtos.login_result_dto import LoginResultDto
 from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 from modules.autenticador.dominio.repositorios.auth_repository import AuthRepository
 
@@ -8,7 +9,7 @@ class AuthService:
         self.algorithm = algorithm
         self.auth_repository = auth_repository
 
-    def login(self, email: str, password: str) -> SessionDto:
+    def login(self, email: str, password: str) -> LoginResultDto:
         """Login using the repository to query the database"""
         return self.auth_repository.login(email, password)
 
@@ -19,3 +20,7 @@ class AuthService:
     def signOut(self) -> SessionDto:
         """Sign out the current user"""
         return self.auth_repository.signOut()
+
+    def user_exists(self, email: str) -> bool:
+        """Check if a user with the given email already exists"""
+        return self.auth_repository.user_exists(email)

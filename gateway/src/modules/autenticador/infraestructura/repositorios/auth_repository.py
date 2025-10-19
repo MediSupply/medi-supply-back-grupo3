@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import jwt
 from config.db import db
+from modules.autenticador.aplicacion.dtos.login_result_dto import LoginResultDto
 from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
 from modules.autenticador.dominio.entities.session import Session
@@ -16,28 +17,36 @@ class AuthRepositoryImpl(AuthRepository):
         self.secret_key = secret_key
         self.algorithm = algorithm
 
-    def login(self, email: str, password: str) -> SessionDto:
+    def login(self, email: str, password: str) -> LoginResultDto:
         try:
             # Query the database using the correct model
             auth = db.session.query(UserModel).filter_by(email=email).first()
-            if auth and auth.password == password:  # Add password verification
-                exp = datetime.now() + timedelta(hours=1)
-                token = jwt.encode(
-                    {"user_id": auth.id, "role": auth.role.value, "exp": exp}, key=self.secret_key, algorithm=self.algorithm
-                )
 
-                session = Session(
-                    id=auth.id,
-                    user_id=auth.id,
-                    token=token,
-                    expires_at=exp,
-                )
-                return SessionMapper.entity_to_dto(session)
-            else:
-                return None
+            # Si el usuario no existe
+            if not auth:
+                return LoginResultDto.user_not_found_error()
+
+            # Si el usuario existe pero la contraseña es incorrecta
+            if auth.password != password:
+                return LoginResultDto.invalid_credentials_error()
+
+            # Si todo está correcto, crear la sesión
+            exp = datetime.now() + timedelta(hours=1)
+            token = jwt.encode(
+                {"user_id": auth.id, "role": auth.role.value, "exp": exp}, key=self.secret_key, algorithm=self.algorithm
+            )
+
+            session = Session(
+                id=auth.id,
+                user_id=auth.id,
+                token=token,
+                expires_at=exp,
+            )
+            return LoginResultDto.success(SessionMapper.entity_to_dto(session))
+
         except Exception as e:
             print(f"Error in login: {e}")  # Add logging for debugging
-            return None
+            return LoginResultDto.invalid_credentials_error()
 
     def signUp(self, name: str, email: str, password: str, role: str = "USER") -> SessionDto:
         try:
@@ -101,3 +110,12 @@ class AuthRepositoryImpl(AuthRepository):
         except Exception as e:
             print(f"Error in signOut: {e}")
             return None
+
+    def user_exists(self, email: str) -> bool:
+        """Check if a user with the given email already exists"""
+        try:
+            existing_user = db.session.query(UserModel).filter_by(email=email).first()
+            return existing_user is not None
+        except Exception as e:
+            print(f"Error checking if user exists: {e}")
+            return False
