@@ -21,15 +21,15 @@ class AuthRepositoryImpl(AuthRepository):
         try:
             # Query the database using the correct model
             auth = db.session.query(UserModel).filter_by(email=email).first()
-            
+
             # Si el usuario no existe
             if not auth:
                 return LoginResultDto.user_not_found_error()
-            
+
             # Si el usuario existe pero la contraseña es incorrecta
             if auth.password != password:
                 return LoginResultDto.invalid_credentials_error()
-            
+
             # Si todo está correcto, crear la sesión
             exp = datetime.now() + timedelta(hours=1)
             token = jwt.encode(
@@ -43,7 +43,7 @@ class AuthRepositoryImpl(AuthRepository):
                 expires_at=exp,
             )
             return LoginResultDto.success(SessionMapper.entity_to_dto(session))
-            
+
         except Exception as e:
             print(f"Error in login: {e}")  # Add logging for debugging
             return LoginResultDto.invalid_credentials_error()

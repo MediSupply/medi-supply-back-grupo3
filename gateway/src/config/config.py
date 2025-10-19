@@ -83,11 +83,13 @@ class Config:
 
     def _configure_cors(self):
         """Configura CORS para permitir peticiones desde el frontend."""
-        CORS(self.app, 
-             origins=["http://localhost:4200", "http://127.0.0.1:4200"],
-             methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-             allow_headers=["Content-Type", "Authorization"],
-             supports_credentials=True)
+        CORS(
+            self.app,
+            origins=["http://localhost:4200", "http://127.0.0.1:4200"],
+            methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            allow_headers=["Content-Type", "Authorization"],
+            supports_credentials=True,
+        )
 
     def _configure_db(self):
         init_db(self.app)
