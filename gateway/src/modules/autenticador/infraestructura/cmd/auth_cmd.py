@@ -1,5 +1,6 @@
-from flask import Response, jsonify
+from flask import Response, jsonify, request
 from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
+from modules.autenticador.aplicacion.mappers.user_mapper import UserMapper
 from modules.autenticador.aplicacion.use_cases.auth_use_case import AuthUseCase
 
 
@@ -49,3 +50,29 @@ class AuthCmd:
             return jsonify({"message": "Sesión cerrada exitosamente"}), 200
         except Exception as e:
             return jsonify({"error": "Error al cerrar sesión"}), 500
+
+    def get_me(self) -> Response:
+        """Get current authenticated user information"""
+        try:
+            # Get Authorization header
+            auth_header = request.headers.get("Authorization")
+            if not auth_header:
+                return jsonify({"error": "Token de autorización no proporcionado"}), 401
+
+            # Extract token from "Bearer <token>" format
+            if not auth_header.startswith("Bearer "):
+                return jsonify({"error": "Formato de token inválido. Use 'Bearer <token>'"}), 401
+
+            token = auth_header.split(" ")[1]
+
+            # Get current user from use case
+            user = self.auth_use_case.get_current_user(token)
+            if not user:
+                return jsonify({"error": "Token inválido o expirado"}), 401
+
+            # Convert to JSON without password
+            user_json = UserMapper.entity_to_json_safe(user)
+            return jsonify(user_json), 200
+
+        except Exception as e:
+            return jsonify({"error": "Error al obtener información del usuario"}), 500

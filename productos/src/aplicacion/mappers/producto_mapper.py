@@ -1,8 +1,7 @@
-from decimal import Decimal
 from typing import Any, Dict
 
-from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
-from src.dominio.entities.producto import Categoria, Producto
+from src.aplicacion.dtos.producto_dto import ProductoDto
+from src.dominio.entities.producto import Producto
 
 
 class ProductoMapper:
@@ -12,10 +11,14 @@ class ProductoMapper:
             id=producto["id"],
             nombre=producto["nombre"],
             descripcion=producto["descripcion"],
-            precio=producto["precio"],
-            categoria=CategoriaDto(producto["categoria"]),
-            stock=producto["stock"],
-            activo=producto.get("activo", True),
+            categoria=producto["categoria"],
+            condiciones_almacenamiento=producto["condiciones_almacenamiento"],
+            valor_unitario=producto["valor_unitario"],
+            cantidad_disponible=producto["cantidad_disponible"],
+            fecha_vencimiento=producto["fecha_vencimiento"],
+            lote=producto["lote"],
+            tiempo_estimado_entrega=producto["tiempo_estimado_entrega"],
+            id_proveedor=producto["id_proveedor"],
         )
 
     @staticmethod
@@ -24,34 +27,44 @@ class ProductoMapper:
             "id": producto_dto.id,
             "nombre": producto_dto.nombre,
             "descripcion": producto_dto.descripcion,
-            "precio": producto_dto.precio,
-            "categoria": producto_dto.categoria.value,
-            "stock": producto_dto.stock,
-            "activo": producto_dto.activo,
+            "valor_unitario": producto_dto.valor_unitario,
+            "categoria": producto_dto.categoria,
+            "condiciones_almacenamiento": producto_dto.condiciones_almacenamiento,
+            "cantidad_disponible": producto_dto.cantidad_disponible,
+            "fecha_vencimiento": producto_dto.fecha_vencimiento,
+            "lote": producto_dto.lote,
+            "tiempo_estimado_entrega": producto_dto.tiempo_estimado_entrega,
+            "id_proveedor": producto_dto.id_proveedor,
         }
 
     @staticmethod
     def dto_to_entity(producto_dto: ProductoDto) -> Producto:
-        categoria = Categoria(producto_dto.categoria.value)
         return Producto(
             id=producto_dto.id,
             nombre=producto_dto.nombre,
             descripcion=producto_dto.descripcion,
-            precio=Decimal(str(producto_dto.precio)),
-            categoria=categoria,
-            stock=producto_dto.stock,
-            activo=producto_dto.activo,
+            categoria=producto_dto.categoria,
+            condiciones_almacenamiento=producto_dto.condiciones_almacenamiento,
+            valor_unitario=producto_dto.valor_unitario,
+            cantidad_disponible=producto_dto.cantidad_disponible,
+            fecha_vencimiento=producto_dto.fecha_vencimiento,
+            lote=producto_dto.lote,
+            tiempo_estimado_entrega=producto_dto.tiempo_estimado_entrega,
+            id_proveedor=producto_dto.id_proveedor,
         )
 
     @staticmethod
     def entity_to_dto(producto: Producto) -> ProductoDto:
-        categoria = CategoriaDto(producto.categoria.value)
         return ProductoDto(
             id=producto.id,
             nombre=producto.nombre,
             descripcion=producto.descripcion,
-            precio=float(producto.precio),
-            categoria=categoria,
-            stock=producto.stock,
-            activo=producto.activo,
+            categoria=producto.categoria,
+            condiciones_almacenamiento=producto.condiciones_almacenamiento,
+            valor_unitario=float(producto.valor_unitario),
+            cantidad_disponible=producto.cantidad_disponible,
+            fecha_vencimiento=producto.fecha_vencimiento,
+            lote=producto.lote,
+            tiempo_estimado_entrega=producto.tiempo_estimado_entrega,
+            id_proveedor=producto.id_proveedor,
         )

@@ -11,10 +11,10 @@ from typing import Optional
 class Role(Enum):
     """Roles disponibles en el sistema."""
 
-    ADMIN = "admin"
-    MANAGER = "manager"
-    USER = "user"
-    VIEWER = "viewer"
+    ADMIN = "ADMIN"
+    MANAGER = "MANAGER"
+    USER = "USER"
+    VIEWER = "VIEWER"
 
 
 @dataclass
@@ -31,9 +31,12 @@ class TokenPayload:
     @classmethod
     def from_dict(cls, data: dict) -> "TokenPayload":
         """Crea TokenPayload desde diccionario JWT."""
+        # Convertir role a mayúsculas para coincidir con el enum (que tiene valores en mayúsculas)
+        role_value = data["role"].upper() if isinstance(data["role"], str) else data["role"]
+        
         return cls(
             user_id=str(data["user_id"]),
-            role=Role(data["role"]),
+            role=Role(role_value),
             exp=datetime.utcfromtimestamp(data["exp"]),
             iat=datetime.utcfromtimestamp(data["iat"]) if "iat" in data else None,
         )

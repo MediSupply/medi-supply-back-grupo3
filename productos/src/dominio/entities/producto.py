@@ -1,17 +1,6 @@
 from dataclasses import dataclass
-from decimal import Decimal
-from enum import Enum
+import datetime
 from typing import Any, Dict
-
-
-class Categoria(Enum):
-    ELECTRONICOS = "electronicos"
-    ROPA = "ropa"
-    HOGAR = "hogar"
-    DEPORTES = "deportes"
-    LIBROS = "libros"
-    OTROS = "otros"
-
 
 @dataclass(frozen=True)
 class Producto:
@@ -22,10 +11,14 @@ class Producto:
     id: str
     nombre: str
     descripcion: str
-    precio: Decimal
-    categoria: Categoria
-    stock: int
-    activo: bool = True
+    categoria: str
+    condiciones_almacenamiento: str
+    valor_unitario: float
+    cantidad_disponible: int
+    fecha_vencimiento: datetime
+    lote: str
+    tiempo_estimado_entrega: str
+    id_proveedor: str
 
     def to_dict(self) -> Dict[str, Any]:
         """Convierte la entidad a diccionario."""
@@ -33,8 +26,12 @@ class Producto:
             "id": self.id,
             "nombre": self.nombre,
             "descripcion": self.descripcion,
-            "precio": float(self.precio),
-            "categoria": self.categoria.value,
-            "stock": self.stock,
-            "activo": self.activo,
+            "categoria": self.categoria,
+            "condiciones_almacenamiento": self.condiciones_almacenamiento,
+            "valor_unitario": float(self.valor_unitario),
+            "cantidad_disponible": self.cantidad_disponible,
+            "fecha_vencimiento": self.fecha_vencimiento,
+            "lote": self.lote,
+            "tiempo_estimado_entrega": self.tiempo_estimado_entrega,
+            "id_proveedor": self.id_proveedor,
         }

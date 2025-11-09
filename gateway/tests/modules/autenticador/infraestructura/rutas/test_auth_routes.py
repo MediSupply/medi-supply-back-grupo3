@@ -18,41 +18,19 @@ class TestAuthRoutes:
 
     def setup_method(self):
         """Setup para cada test"""
+        from modules.autenticador.infraestructura.rutas.auth_routes import create_auth_routes
+
         # Crear mock del controlador
         self.mock_controller = Mock()
 
-        # Crear blueprint manualmente para evitar imports circulares
-        self.auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
-
-        # Definir rutas manualmente
-        @self.auth_bp.route("/login", methods=["POST"])
-        def login():
-            from flask import request
-
-            data = request.get_json()
-            email = data.get("email")
-            password = data.get("password")
-            return self.mock_controller.login(email, password)
-
-        @self.auth_bp.route("/signup", methods=["POST"])
-        def signup():
-            from flask import request
-
-            data = request.get_json()
-            name = data.get("name")
-            email = data.get("email")
-            password = data.get("password")
-            role = data.get("role", "USER")
-            return self.mock_controller.signUp(name, email, password, role)
-
-        @self.auth_bp.route("/signout", methods=["POST"])
-        def signout():
-            return self.mock_controller.signOut()
-
         # Crear aplicación Flask de prueba
         self.app = Flask(__name__)
-        self.app.register_blueprint(self.auth_bp)
         self.app.config["TESTING"] = True
+        
+        # Crear blueprint usando la función real
+        self.auth_bp = create_auth_routes(self.mock_controller)
+        self.app.register_blueprint(self.auth_bp)
+        
         self.client = self.app.test_client()
 
     def test_signup_endpoint_success(self):
@@ -168,6 +146,59 @@ class TestAuthRoutes:
 
         # Debe devolver error 400 por JSON inválido
         assert response.status_code == 400
+
+    def test_get_me_endpoint_success(self):
+        """Test del endpoint /me exitoso"""
+        # Mock del controlador
+        self.mock_controller.get_me.return_value = ({"id": "user-id-123", "name": "Test User", "email": "test@example.com", "role": "user"}, 200)
+
+        # Ejecutar request con header Authorization
+        response = self.client.get("/auth/me", headers={"Authorization": "Bearer valid-token"})
+
+        # Verificaciones
+        assert response.status_code == 200
+        self.mock_controller.get_me.assert_called_once()
+        response_data = response.get_json()
+        assert response_data["id"] == "user-id-123"
+        assert response_data["name"] == "Test User"
+        assert response_data["email"] == "test@example.com"
+        assert response_data["role"] == "user"
+
+    def test_get_me_endpoint_no_authorization(self):
+        """Test del endpoint /me sin header Authorization"""
+        # Mock del controlador para devolver error 401
+        self.mock_controller.get_me.return_value = ({"error": "Token de autorización no proporcionado"}, 401)
+
+        # Ejecutar request sin header Authorization
+        response = self.client.get("/auth/me")
+
+        # Verificaciones
+        assert response.status_code == 401
+        self.mock_controller.get_me.assert_called_once()
+
+    def test_get_me_endpoint_invalid_token(self):
+        """Test del endpoint /me con token inválido"""
+        # Mock del controlador para devolver error 401
+        self.mock_controller.get_me.return_value = ({"error": "Token inválido o expirado"}, 401)
+
+        # Ejecutar request con token inválido
+        response = self.client.get("/auth/me", headers={"Authorization": "Bearer invalid-token"})
+
+        # Verificaciones
+        assert response.status_code == 401
+        self.mock_controller.get_me.assert_called_once()
+
+    def test_get_me_endpoint_invalid_format(self):
+        """Test del endpoint /me con formato de token inválido"""
+        # Mock del controlador para devolver error 401
+        self.mock_controller.get_me.return_value = ({"error": "Formato de token inválido. Use 'Bearer <token>'"}, 401)
+
+        # Ejecutar request con formato inválido (sin "Bearer ")
+        response = self.client.get("/auth/me", headers={"Authorization": "invalid-format-token"})
+
+        # Verificaciones
+        assert response.status_code == 401
+        self.mock_controller.get_me.assert_called_once()
 
 
 if __name__ == "__main__":

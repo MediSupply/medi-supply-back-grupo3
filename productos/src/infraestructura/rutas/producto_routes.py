@@ -27,7 +27,7 @@ def create_producto_routes(producto_controller: ProductoCmd) -> Blueprint:
         """Busca productos por nombre."""
         nombre = request.args.get("nombre", "")
         if not nombre:
-            return {"success": False, "error": "Parámetro nombre es requerido"}, 400
+            return { "error": "Parámetro nombre es requerido"}, 400
 
         return producto_controller.buscar_productos_por_nombre(nombre)
 

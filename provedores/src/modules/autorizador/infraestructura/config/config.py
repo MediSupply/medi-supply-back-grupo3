@@ -7,11 +7,6 @@ from flask import Flask, g, request
 from modules.autorizador.aplicacion.servicios.auth_service import AuthService
 from modules.autorizador.infraestructura.cmd.auth_cmd import AuthCmd
 from modules.autorizador.infraestructura.rutas.auth_routes import create_auth_routes
-from modules.health.aplicacion.servicios import HealthService
-from modules.health.aplicacion.use_cases.health_use_case import HealthUseCase
-from modules.health.infraestructura.cmd import HealthCmd
-from modules.health.infraestructura.repositorios import HealthRepositoryImpl
-from modules.health.infraestructura.rutas.health_routes import create_health_routes
 
 load_dotenv(".env")
 
@@ -111,14 +106,6 @@ class Config:
 
     def _setup_dependencies(self):
         """Configura la inyección de dependencias siguiendo arquitectura hexagonal."""
-        # Capa de Infraestructura
-        health_repository = HealthRepositoryImpl()
-        # Capa de Dominio
-        health_service = HealthService(health_repository)
-        # Capa de Aplicación
-        health_check_use_case = HealthUseCase(health_service)
-        # Capa de Presentación (Controladores)
-        self.health_controller = HealthCmd(health_check_use_case)
 
         # Configurar servicio de autorización simplificado
         jwt_secret = self.app.config.get("JWT_SECRET")
@@ -133,9 +120,6 @@ class Config:
 
     def _register_routes(self):
         """Registra todas las rutas de la aplicación."""
-        # Registrar rutas de health
-        health_routes = create_health_routes(self.health_controller)
-        self.app.register_blueprint(health_routes)
 
         auth_routes = create_auth_routes(self.auth_controller)
         self.app.register_blueprint(auth_routes)

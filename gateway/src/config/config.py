@@ -17,6 +17,7 @@ from modules.health.infraestructura.repositorios import HealthRepositoryImpl
 from modules.health.infraestructura.rutas.health_routes import create_health_routes
 from modules.productos.infraestructura.rutas.producto_routes import create_producto_routes
 from modules.provedores.infraestructura.rutas.provedores_routes import create_provedores_routes
+from modules.clientes.infraestructura.rutas.cliente_routes import create_cliente_routes
 
 from .db import db, init_db
 
@@ -78,6 +79,7 @@ class Config:
         self.app.config["ALGORITHM"] = os.getenv("ALGORITHM", "HS256")
         self.app.config["PRODUCTOS_SERVICE_URL"] = os.getenv("PRODUCTOS_SERVICE_URL", "http://127.0.0.1:5001")
         self.app.config["PROVEDORES_SERVICE_URL"] = os.getenv("PROVEDORES_SERVICE_URL", "http://127.0.0.1:5003")
+        self.app.config["CLIENTES_SERVICE_URL"] = os.getenv("CLIENTES_SERVICE_URL", "http://clientes:5004")
         self.app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///app.db")
         self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -175,6 +177,9 @@ class Config:
 
         provedores_routes = create_provedores_routes()
         self.app.register_blueprint(provedores_routes)
+
+        clientes_routes = create_cliente_routes()
+        self.app.register_blueprint(clientes_routes)
 
         # Ruta raíz simple
         @self.app.route("/")

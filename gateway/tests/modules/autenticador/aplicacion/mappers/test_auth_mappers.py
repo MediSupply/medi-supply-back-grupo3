@@ -5,6 +5,7 @@ Tests unitarios para los mappers del módulo de autenticación del gateway
 import os
 import sys
 from datetime import datetime, timedelta
+from unittest.mock import Mock
 
 import pytest
 
@@ -138,6 +139,101 @@ class TestUserMapper:
 
         admin_dto = UserMapper.entity_to_dto(admin_user)
         assert admin_dto.role == RoleDto.ADMIN  # DTO usa minúsculas
+
+    def test_user_mapper_json_to_dto(self):
+        """Test del método json_to_dto del UserMapper"""
+        from modules.autenticador.aplicacion.mappers.user_mapper import UserMapper
+
+        json_data = {
+            "id": "user-id",
+            "name": "Test User",
+            "email": "test@example.com",
+            "password": "password123",
+            "role": "user",
+            "token": "jwt-token",
+        }
+
+        user_dto = UserMapper.json_to_dto(json_data)
+        assert user_dto.id == "user-id"
+        assert user_dto.name == "Test User"
+        assert user_dto.email == "test@example.com"
+        assert user_dto.password == "password123"
+        assert user_dto.role.value == "user"
+        assert user_dto.token == "jwt-token"
+
+    def test_user_mapper_dto_to_json(self):
+        """Test del método dto_to_json del UserMapper"""
+        from modules.autenticador.aplicacion.dtos.user_dto import RoleDto, UserDto
+        from modules.autenticador.aplicacion.mappers.user_mapper import UserMapper
+
+        user_dto = UserDto(
+            id="user-id",
+            name="Test User",
+            email="test@example.com",
+            password="password123",
+            role=RoleDto.USER,
+            token="jwt-token",
+        )
+
+        json_data = UserMapper.dto_to_json(user_dto)
+        assert json_data["id"] == "user-id"
+        assert json_data["name"] == "Test User"
+        assert json_data["email"] == "test@example.com"
+        assert json_data["password"] == "password123"
+        assert json_data["role"] == "user"
+        assert json_data["token"] == "jwt-token"
+
+    def test_user_mapper_entity_to_json_safe(self):
+        """Test del método entity_to_json_safe del UserMapper"""
+        from modules.autenticador.aplicacion.mappers.user_mapper import UserMapper
+        from modules.autenticador.dominio.entities.user import Role, User
+
+        user = User(id="user-id", name="Test User", email="test@example.com", password="password123", role=Role.USER)
+
+        json_data = UserMapper.entity_to_json_safe(user)
+        assert json_data["id"] == "user-id"
+        assert json_data["name"] == "Test User"
+        assert json_data["email"] == "test@example.com"
+        assert json_data["role"] == "user"  # Lowercase
+        assert "password" not in json_data  # Password no debe estar en el JSON seguro
+
+    def test_user_mapper_infrastructure_to_domain(self):
+        """Test del método infrastructure_to_domain del UserMapper"""
+        from modules.autenticador.aplicacion.mappers.user_mapper import UserMapper
+        from modules.autenticador.dominio.entities.user import Role, User
+        from modules.autenticador.infraestructura.dto.user import Role as InfraRole
+        from modules.autenticador.infraestructura.dto.user import User as InfraUser
+
+        # Crear un mock de infraestructura user
+        infra_user = Mock()
+        infra_user.id = "user-id"
+        infra_user.name = "Test User"
+        infra_user.email = "test@example.com"
+        infra_user.password = "password123"
+        infra_user.role = Mock()
+        infra_user.role.value = "USER"
+
+        domain_user = UserMapper.infrastructure_to_domain(infra_user)
+        assert isinstance(domain_user, User)
+        assert domain_user.id == "user-id"
+        assert domain_user.name == "Test User"
+        assert domain_user.email == "test@example.com"
+        assert domain_user.password == "password123"
+        assert domain_user.role == Role.USER
+
+    def test_user_mapper_domain_to_infrastructure(self):
+        """Test del método domain_to_infrastructure del UserMapper"""
+        from modules.autenticador.aplicacion.mappers.user_mapper import UserMapper
+        from modules.autenticador.dominio.entities.user import Role, User
+
+        domain_user = User(id="user-id", name="Test User", email="test@example.com", password="password123", role=Role.USER)
+
+        infra_user = UserMapper.domain_to_infrastructure(domain_user)
+        assert infra_user.id == "user-id"
+        assert infra_user.name == "Test User"
+        assert infra_user.email == "test@example.com"
+        assert infra_user.password == "password123"
+        assert infra_user.role.value == "USER"
 
 
 if __name__ == "__main__":
