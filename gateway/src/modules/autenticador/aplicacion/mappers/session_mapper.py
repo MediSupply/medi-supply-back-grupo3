@@ -12,6 +12,7 @@ class SessionMapper:
             user_id=session.user_id,
             token=session.token,
             expires_at=session.expires_at,
+            isAdmin=session.isAdmin,
         )
 
     @staticmethod
@@ -21,6 +22,7 @@ class SessionMapper:
             user_id=session_dto.user_id,
             token=session_dto.token,
             expires_at=session_dto.expires_at,
+            isAdmin=session_dto.isAdmin,
         )
 
     @staticmethod
@@ -30,6 +32,7 @@ class SessionMapper:
             "user_id": session_dto.user_id,
             "token": session_dto.token,
             "expires_at": session_dto.expires_at,
+            "isAdmin": session_dto.isAdmin,
         }
 
     @staticmethod
@@ -39,4 +42,5 @@ class SessionMapper:
             user_id=json["user_id"],
             token=json["token"],
             expires_at=json["expires_at"],
+            isAdmin=json.get("isAdmin", False),
         )

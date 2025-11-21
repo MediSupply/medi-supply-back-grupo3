@@ -180,12 +180,13 @@ class TestSessionEntity:
         Session = session_module.Session
 
         expires_at = datetime.now() + timedelta(hours=1)
-        session = Session(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at)
+        session = Session(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at, isAdmin=False)
 
         assert session.id == "session-id"
         assert session.user_id == "user-id"
         assert session.token == "jwt-token"
         assert session.expires_at == expires_at
+        assert session.isAdmin == False
 
     def test_session_entity_to_dict(self):
         """Test del método to_dict de Session"""
@@ -214,7 +215,7 @@ class TestSessionEntity:
         Session = session_module.Session
 
         expires_at = datetime.now() + timedelta(hours=1)
-        session = Session(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at)
+        session = Session(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at, isAdmin=True)
 
         session_dict = session.to_dict()
         assert isinstance(session_dict, dict)
@@ -222,6 +223,7 @@ class TestSessionEntity:
         assert session_dict["user_id"] == "user-id"
         assert session_dict["token"] == "jwt-token"
         assert session_dict["expires_at"] == expires_at
+        assert session_dict["isAdmin"] == True
 
     def test_session_entity_immutable(self):
         """Test de que Session es inmutable (frozen dataclass)"""
@@ -250,7 +252,7 @@ class TestSessionEntity:
         Session = session_module.Session
 
         expires_at = datetime.now() + timedelta(hours=1)
-        session = Session(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at)
+        session = Session(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at, isAdmin=False)
 
         # Verificar que es inmutable
         with pytest.raises(AttributeError):

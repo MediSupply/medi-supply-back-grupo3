@@ -44,6 +44,7 @@ class AuthRepositoryImpl(AuthRepository):
                 user_id=auth.id,
                 token=token,
                 expires_at=exp_datetime,
+                isAdmin=auth.role == Role.ADMIN,
             )
             return LoginResultDto.success(SessionMapper.entity_to_dto(session))
 
@@ -87,6 +88,7 @@ class AuthRepositoryImpl(AuthRepository):
                 user_id=user_id,
                 token=token,
                 expires_at=exp_datetime,
+                isAdmin=user_role == Role.ADMIN,
             )
 
             return SessionMapper.entity_to_dto(session)
@@ -109,6 +111,7 @@ class AuthRepositoryImpl(AuthRepository):
                 user_id="",  # Empty user_id for logout
                 token="",  # Empty token for logout
                 expires_at=datetime.now(),  # Current time to indicate expired
+                isAdmin=False,  # Default to False for logout
             )
 
             return SessionMapper.entity_to_dto(logout_session)
