@@ -45,4 +45,11 @@ def create_provedores_routes() -> Blueprint:
         headers = request.headers
         return make_request_to_provedores(f"/provedores/{provedor_id}", headers=headers)
 
+    @provedores_routes.route("", methods=["POST"])
+    def registrar_provedor():
+        """Registra un nuevo proveedor."""
+        data = request.get_json()
+        headers = request.headers
+        return make_request_to_provedores("/provedores", method="POST", data=data, headers=headers)
+
     return provedores_routes

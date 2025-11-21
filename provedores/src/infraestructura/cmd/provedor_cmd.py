@@ -67,3 +67,33 @@ class ProvedorCmd:
             return jsonify({"success": True, "data": provedores_dict, "total": len(provedores_dict)}), 200
         except Exception as e:
             return jsonify({"success": False, "error": f"Error al buscar proveedores: {str(e)}"}), 500
+
+    def registrar_provedor(self, provedor_data: dict):
+        """Registra un nuevo proveedor."""
+        try:
+            # Validar campos requeridos
+            required_fields = ["nit", "nombre", "pais", "direccion", "telefono", "email"]
+            missing_fields = [field for field in required_fields if field not in provedor_data or not provedor_data[field]]
+            if missing_fields:
+                return jsonify({"success": False, "error": f"Campos requeridos faltantes: {', '.join(missing_fields)}"}), 400
+
+            # Verificar si ya existe un proveedor con el mismo NIT
+            existing_provedor = self.provedor_use_case.obtener_provedor_por_nit(provedor_data["nit"])
+            if existing_provedor:
+                return jsonify({"success": False, "error": f"Ya existe un proveedor con NIT {provedor_data['nit']}"}), 409
+
+            # Convertir diccionario a entidad
+            provedor = ProvedorMapper.dict_to_entity(provedor_data)
+            
+            # Crear el proveedor
+            nuevo_provedor = self.provedor_use_case.crear_provedor(provedor)
+            
+            # Convertir a DTO y luego a diccionario para la respuesta
+            provedor_dto = ProvedorMapper.entity_to_dto(nuevo_provedor)
+            provedor_dict = ProvedorMapper.dto_to_dict(provedor_dto)
+            
+            return jsonify({"success": True, "data": provedor_dict, "message": "Proveedor registrado exitosamente"}), 201
+        except ValueError as e:
+            return jsonify({"success": False, "error": str(e)}), 400
+        except Exception as e:
+            return jsonify({"success": False, "error": f"Error al registrar proveedor: {str(e)}"}), 500
