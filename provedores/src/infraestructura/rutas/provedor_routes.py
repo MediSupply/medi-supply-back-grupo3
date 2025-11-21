@@ -36,4 +36,13 @@ def create_provedor_routes(provedor_controller: ProvedorCmd) -> Blueprint:
 
         return provedor_controller.buscar_provedores_por_nombre(nombre)
 
+    @provedor_routes.route("", methods=["POST"])
+    def registrar_provedor():
+        """Registra un nuevo proveedor."""
+        data = request.get_json()
+        if not data:
+            return {"success": False, "error": "El cuerpo de la petición debe contener datos JSON"}, 400
+
+        return provedor_controller.registrar_provedor(data)
+
     return provedor_routes

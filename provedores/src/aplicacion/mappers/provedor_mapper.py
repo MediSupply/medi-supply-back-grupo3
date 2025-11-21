@@ -53,3 +53,16 @@ class ProvedorMapper:
     def dtos_to_dicts(provedores_dto: list[ProvedorDto]) -> list[dict]:
         """Convierte una lista de ProvedorDto a lista de diccionarios para serialización JSON."""
         return [ProvedorMapper.dto_to_dict(provedor_dto) for provedor_dto in provedores_dto]
+
+    @staticmethod
+    def dict_to_entity(provedor_dict: dict) -> Provedor:
+        """Convierte un diccionario a entidad Provedor. El ID se genera automáticamente en el repositorio."""
+        return Provedor(
+            id=0,  # ID temporal, será reemplazado por el repositorio
+            nit=provedor_dict["nit"],
+            nombre=provedor_dict["nombre"],
+            pais=Pais(provedor_dict["pais"].lower()),
+            direccion=provedor_dict["direccion"],
+            telefono=provedor_dict["telefono"],
+            email=provedor_dict["email"],
+        )
