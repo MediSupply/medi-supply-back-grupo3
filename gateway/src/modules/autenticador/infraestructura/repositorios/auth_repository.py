@@ -31,16 +31,19 @@ class AuthRepositoryImpl(AuthRepository):
                 return LoginResultDto.invalid_credentials_error()
 
             # Si todo está correcto, crear la sesión
-            exp = datetime.now() + timedelta(hours=1)
+            exp_datetime = datetime.utcnow() + timedelta(hours=1)
+            exp_timestamp = int(exp_datetime.timestamp())
+            # Convertir rol a minúsculas para compatibilidad con microservicios
+            role_value = auth.role.value.lower()
             token = jwt.encode(
-                {"user_id": auth.id, "role": auth.role.value, "exp": exp}, key=self.secret_key, algorithm=self.algorithm
+                {"user_id": auth.id, "role": role_value, "exp": exp_timestamp}, key=self.secret_key, algorithm=self.algorithm
             )
 
             session = Session(
                 id=auth.id,
                 user_id=auth.id,
                 token=token,
-                expires_at=exp,
+                expires_at=exp_datetime,
             )
             return LoginResultDto.success(SessionMapper.entity_to_dto(session))
 
@@ -70,9 +73,12 @@ class AuthRepositoryImpl(AuthRepository):
             db.session.commit()
 
             # Generate JWT token
-            exp = datetime.now() + timedelta(hours=1)
+            exp_datetime = datetime.utcnow() + timedelta(hours=1)
+            exp_timestamp = int(exp_datetime.timestamp())
+            # Convertir rol a minúsculas para compatibilidad con microservicios
+            role_value = user_role.value.lower()
             token = jwt.encode(
-                {"user_id": user_id, "role": user_role.value, "exp": exp}, key=self.secret_key, algorithm=self.algorithm
+                {"user_id": user_id, "role": role_value, "exp": exp_timestamp}, key=self.secret_key, algorithm=self.algorithm
             )
 
             # Create session
@@ -80,7 +86,7 @@ class AuthRepositoryImpl(AuthRepository):
                 id=user_id,
                 user_id=user_id,
                 token=token,
-                expires_at=exp,
+                expires_at=exp_datetime,
             )
 
             return SessionMapper.entity_to_dto(session)
