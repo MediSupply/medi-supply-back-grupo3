@@ -84,14 +84,14 @@ class ProvedorCmd:
 
             # Convertir diccionario a entidad
             provedor = ProvedorMapper.dict_to_entity(provedor_data)
-            
+
             # Crear el proveedor
             nuevo_provedor = self.provedor_use_case.crear_provedor(provedor)
-            
+
             # Convertir a DTO y luego a diccionario para la respuesta
             provedor_dto = ProvedorMapper.entity_to_dto(nuevo_provedor)
             provedor_dict = ProvedorMapper.dto_to_dict(provedor_dto)
-            
+
             return jsonify({"success": True, "data": provedor_dict, "message": "Proveedor registrado exitosamente"}), 201
         except ValueError as e:
             return jsonify({"success": False, "error": str(e)}), 400
