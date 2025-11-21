@@ -30,7 +30,7 @@ class TestAuthUseCase:
         from modules.autenticador.aplicacion.use_cases.auth_use_case import AuthUseCase
 
         mock_service = Mock()
-        mock_session = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=None)
+        mock_session = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=None, isAdmin=False)
         mock_service.login.return_value = mock_session
 
         use_case = AuthUseCase(mock_service)
@@ -45,7 +45,7 @@ class TestAuthUseCase:
         from modules.autenticador.aplicacion.use_cases.auth_use_case import AuthUseCase
 
         mock_service = Mock()
-        mock_session = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=None)
+        mock_session = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=None, isAdmin=False)
         mock_service.signUp.return_value = mock_session
 
         use_case = AuthUseCase(mock_service)
@@ -58,7 +58,7 @@ class TestAuthUseCase:
         from modules.autenticador.aplicacion.use_cases.auth_use_case import AuthUseCase
 
         mock_service = Mock()
-        mock_session = SessionDto(id="", user_id="", token="", expires_at=None)
+        mock_session = SessionDto(id="", user_id="", token="", expires_at=None, isAdmin=False)
         mock_service.signOut.return_value = mock_session
 
         use_case = AuthUseCase(mock_service)

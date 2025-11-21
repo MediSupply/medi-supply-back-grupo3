@@ -9,6 +9,7 @@ class Session:
     user_id: str
     token: str
     expires_at: datetime
+    isAdmin: bool
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -16,4 +17,5 @@ class Session:
             "user_id": self.user_id,
             "token": self.token,
             "expires_at": self.expires_at,
+            "isAdmin": self.isAdmin,
         }

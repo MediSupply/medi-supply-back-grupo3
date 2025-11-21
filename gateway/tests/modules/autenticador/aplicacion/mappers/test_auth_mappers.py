@@ -22,7 +22,7 @@ class TestSessionMapper:
         from modules.autenticador.dominio.entities.session import Session
 
         expires_at = datetime.now() + timedelta(hours=1)
-        session = Session(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at)
+        session = Session(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at, isAdmin=False)
 
         session_dto = SessionMapper.entity_to_dto(session)
         assert isinstance(session_dto, SessionDto)
@@ -30,6 +30,7 @@ class TestSessionMapper:
         assert session_dto.user_id == "user-id"
         assert session_dto.token == "jwt-token"
         assert session_dto.expires_at == expires_at
+        assert session_dto.isAdmin == False
 
     def test_session_mapper_dto_to_entity(self):
         """Test del método dto_to_entity del SessionMapper"""
@@ -38,7 +39,7 @@ class TestSessionMapper:
         from modules.autenticador.dominio.entities.session import Session
 
         expires_at = datetime.now() + timedelta(hours=1)
-        session_dto = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at)
+        session_dto = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at, isAdmin=True)
 
         session = SessionMapper.dto_to_entity(session_dto)
         assert isinstance(session, Session)
@@ -46,6 +47,7 @@ class TestSessionMapper:
         assert session.user_id == "user-id"
         assert session.token == "jwt-token"
         assert session.expires_at == expires_at
+        assert session.isAdmin == True
 
     def test_session_mapper_dto_to_json(self):
         """Test del método dto_to_json del SessionMapper"""
@@ -53,7 +55,7 @@ class TestSessionMapper:
         from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
 
         expires_at = datetime.now() + timedelta(hours=1)
-        session_dto = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at)
+        session_dto = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at, isAdmin=False)
 
         json_data = SessionMapper.dto_to_json(session_dto)
         assert isinstance(json_data, dict)
@@ -61,6 +63,7 @@ class TestSessionMapper:
         assert json_data["user_id"] == "user-id"
         assert json_data["token"] == "jwt-token"
         assert json_data["expires_at"] == expires_at
+        assert json_data["isAdmin"] == False
 
     def test_session_mapper_json_to_dto(self):
         """Test del método json_to_dto del SessionMapper"""
@@ -68,7 +71,7 @@ class TestSessionMapper:
         from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
 
         expires_at = datetime.now() + timedelta(hours=1)
-        json_data = {"id": "session-id", "user_id": "user-id", "token": "jwt-token", "expires_at": expires_at}
+        json_data = {"id": "session-id", "user_id": "user-id", "token": "jwt-token", "expires_at": expires_at, "isAdmin": True}
 
         session_dto = SessionMapper.json_to_dto(json_data)
         assert isinstance(session_dto, SessionDto)
@@ -76,6 +79,7 @@ class TestSessionMapper:
         assert session_dto.user_id == "user-id"
         assert session_dto.token == "jwt-token"
         assert session_dto.expires_at == expires_at
+        assert session_dto.isAdmin == True
 
 
 class TestUserMapper:

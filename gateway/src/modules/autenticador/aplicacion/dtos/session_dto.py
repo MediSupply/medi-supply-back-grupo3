@@ -8,3 +8,4 @@ class SessionDto:
     user_id: str
     token: str
     expires_at: datetime
+    isAdmin: bool

@@ -55,6 +55,41 @@ class TestAuthRepositoryImpl:
         assert result.session.user_id == "user-id"
         assert result.session.token is not None
         assert result.session.expires_at is not None
+        assert result.session.isAdmin == False  # USER role
+        assert result.user_not_found is False
+        assert result.invalid_credentials is False
+
+    @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
+    def test_auth_repository_login_admin_role(self, mock_db):
+        """Test del método login con rol ADMIN"""
+        from modules.autenticador.infraestructura.dto.user import Role
+        from modules.autenticador.infraestructura.dto.user import User as UserModel
+        from modules.autenticador.infraestructura.repositorios.auth_repository import AuthRepositoryImpl
+
+        # Mock del usuario admin en la base de datos
+        mock_user = MagicMock()
+        mock_user.id = "admin-id"
+        mock_user.password = "admin123"
+        mock_user.role = Role.ADMIN
+
+        # Mock de la sesión de base de datos
+        mock_session = MagicMock()
+        mock_session.query.return_value.filter_by.return_value.first.return_value = mock_user
+
+        mock_db.session = mock_session
+
+        repo = AuthRepositoryImpl("secret_key", "HS256")
+
+        # Test login exitoso con rol ADMIN
+        result = repo.login("admin@example.com", "admin123")
+
+        assert result is not None
+        assert result.session is not None
+        assert result.session.id == "admin-id"
+        assert result.session.user_id == "admin-id"
+        assert result.session.token is not None
+        assert result.session.expires_at is not None
+        assert result.session.isAdmin == True  # ADMIN role
         assert result.user_not_found is False
         assert result.invalid_credentials is False
 
@@ -135,6 +170,7 @@ class TestAuthRepositoryImpl:
         assert result.user_id == "new-user-id"
         assert result.token is not None
         assert result.expires_at is not None
+        assert result.isAdmin == False  # USER role
 
         # Verificar que se agregó el usuario a la base de datos
         mock_session.add.assert_called_once()
@@ -189,6 +225,7 @@ class TestAuthRepositoryImpl:
         assert result is not None
         assert result.id == "admin-user-id"
         assert result.user_id == "admin-user-id"
+        assert result.isAdmin == True  # ADMIN role
 
     def test_auth_repository_signout(self):
         """Test del método signOut"""
@@ -204,6 +241,7 @@ class TestAuthRepositoryImpl:
         assert result.user_id == ""
         assert result.token == ""
         assert result.expires_at is not None
+        assert result.isAdmin == False
 
     @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
     def test_auth_repository_login_exception(self, mock_db):

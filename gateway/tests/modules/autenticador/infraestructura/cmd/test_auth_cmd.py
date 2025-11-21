@@ -30,7 +30,7 @@ class TestAuthCmd:
         from modules.autenticador.infraestructura.cmd.auth_cmd import AuthCmd
 
         mock_use_case = Mock()
-        mock_session = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=None)
+        mock_session = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=None, isAdmin=False)
         mock_use_case.execute.return_value = mock_session
 
         cmd = AuthCmd(mock_use_case)
@@ -59,7 +59,7 @@ class TestAuthCmd:
         from modules.autenticador.infraestructura.cmd.auth_cmd import AuthCmd
 
         mock_use_case = Mock()
-        mock_session = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=None)
+        mock_session = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=None, isAdmin=False)
         mock_use_case.execute.return_value = mock_session
 
         cmd = AuthCmd(mock_use_case)
@@ -88,7 +88,7 @@ class TestAuthCmd:
         from modules.autenticador.infraestructura.cmd.auth_cmd import AuthCmd
 
         mock_use_case = Mock()
-        mock_session = SessionDto(id="", user_id="", token="", expires_at=None)
+        mock_session = SessionDto(id="", user_id="", token="", expires_at=None, isAdmin=False)
         mock_use_case.execute.return_value = mock_session
 
         cmd = AuthCmd(mock_use_case)

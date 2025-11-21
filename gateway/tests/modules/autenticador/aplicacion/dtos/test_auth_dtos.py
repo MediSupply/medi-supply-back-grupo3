@@ -20,19 +20,20 @@ class TestSessionDto:
         from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 
         expires_at = datetime.now() + timedelta(hours=1)
-        session_dto = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at)
+        session_dto = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at, isAdmin=False)
 
         assert session_dto.id == "session-id"
         assert session_dto.user_id == "user-id"
         assert session_dto.token == "jwt-token"
         assert session_dto.expires_at == expires_at
+        assert session_dto.isAdmin == False
 
     def test_session_dto_immutable(self):
         """Test de que SessionDto es inmutable"""
         from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 
         expires_at = datetime.now() + timedelta(hours=1)
-        session_dto = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at)
+        session_dto = SessionDto(id="session-id", user_id="user-id", token="jwt-token", expires_at=expires_at, isAdmin=True)
 
         # Verificar que es inmutable (dataclass frozen)
         with pytest.raises(AttributeError):
