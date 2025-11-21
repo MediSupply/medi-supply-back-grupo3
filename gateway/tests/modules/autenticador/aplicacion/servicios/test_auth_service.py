@@ -37,7 +37,11 @@ class TestAuthService:
 
         # Mock del repositorio
         mock_session = SessionDto(
-            id="session-id", user_id="user-id", token="jwt-token", expires_at=datetime.now() + timedelta(hours=1), isAdmin=False
+            id="session-id",
+            user_id="user-id",
+            token="jwt-token",
+            expires_at=datetime.now() + timedelta(hours=1),
+            isAdmin=False,
         )
         mock_repo.login.return_value = mock_session
 
@@ -73,7 +77,11 @@ class TestAuthService:
 
         # Mock del repositorio
         mock_session = SessionDto(
-            id="session-id", user_id="user-id", token="jwt-token", expires_at=datetime.now() + timedelta(hours=1), isAdmin=False
+            id="session-id",
+            user_id="user-id",
+            token="jwt-token",
+            expires_at=datetime.now() + timedelta(hours=1),
+            isAdmin=False,
         )
         mock_repo.signUp.return_value = mock_session
 
@@ -93,7 +101,11 @@ class TestAuthService:
 
         # Mock del repositorio
         mock_session = SessionDto(
-            id="session-id", user_id="user-id", token="jwt-token", expires_at=datetime.now() + timedelta(hours=1), isAdmin=False
+            id="session-id",
+            user_id="user-id",
+            token="jwt-token",
+            expires_at=datetime.now() + timedelta(hours=1),
+            isAdmin=False,
         )
         mock_repo.signUp.return_value = mock_session
 
