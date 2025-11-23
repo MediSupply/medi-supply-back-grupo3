@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="0.280" timestamp="2025-11-23T14:46:18.024766-05:00" hostname="Gabriels-Mac-mini.local"><testcase classname="" name="tests.test_main" time="0.000"><error message="collection failure">tests/test_main.py:10: in &lt;module&gt;
+    import src.main
+src/main.py:56: in &lt;module&gt;
+    app = create_application()
+src/main.py:43: in create_application
+    app = flask_config.create_app()
+src/infraestructura/config/config.py:47: in create_app
+    self._register_routes()
+src/infraestructura/config/config.py:110: in _register_routes
+    create_authorization_middleware(self.app, self.app.config.get("JWT_SECRET"), self.app.config.get("ALGORITHM"))
+src/modules/autorizador/infraestructura/middleware/authorization_middleware.py:92: in create_authorization_middleware
+    raise ValueError("La clave secreta debe tener al menos 32 caracteres para seguridad")
+E   ValueError: La clave secreta debe tener al menos 32 caracteres para seguridad</error></testcase></testsuite></testsuites>
