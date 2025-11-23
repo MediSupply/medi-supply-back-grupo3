@@ -3,8 +3,8 @@ Tests unitarios para las entidades del módulo de productos
 """
 
 from datetime import datetime
-import pytest
 
+import pytest
 from src.dominio.entities.producto import Producto
 
 
