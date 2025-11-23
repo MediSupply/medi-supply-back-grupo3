@@ -148,7 +148,7 @@ class AuthConfig:
         allowed_roles = []
 
         for role, permissions in AuthConfig.ROLE_PERMISSIONS.items():
-            if role == Role.ADMIN:
+            if role == Role.ADMIN or role == Role.USER:
                 # Los administradores tienen todos los permisos
                 allowed_roles.append(role)
             elif isinstance(permissions, dict):

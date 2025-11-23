@@ -35,7 +35,7 @@ class AuthRepositoryImpl(AuthRepository):
             # Si todo está correcto, crear la sesión
             exp_datetime = datetime.utcnow() + timedelta(hours=1)
             exp_timestamp = int(exp_datetime.timestamp())
-            # Convertir rol a minúsculas para compatibilidad con microservicios
+            # Usar rol en minúsculas para consistencia con todos los microservicios
             role_value = auth.role.value.lower()
             token = jwt.encode(
                 {"user_id": auth.id, "role": role_value, "exp": exp_timestamp}, key=self.secret_key, algorithm=self.algorithm
@@ -78,7 +78,7 @@ class AuthRepositoryImpl(AuthRepository):
             # Generate JWT token
             exp_datetime = datetime.utcnow() + timedelta(hours=1)
             exp_timestamp = int(exp_datetime.timestamp())
-            # Convertir rol a minúsculas para compatibilidad con microservicios
+            # Usar rol en minúsculas para consistencia con todos los microservicios
             role_value = user_role.value.lower()
             token = jwt.encode(
                 {"user_id": user_id, "role": role_value, "exp": exp_timestamp}, key=self.secret_key, algorithm=self.algorithm

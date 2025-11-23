@@ -31,10 +31,11 @@ class TokenPayload:
     @classmethod
     def from_dict(cls, data: dict) -> "TokenPayload":
         """Crea TokenPayload desde diccionario JWT."""
-        # Convertir rol a minúsculas para que coincida con el enum
+        # El enum Role tiene valores en minúsculas, normalizar el rol del token
         role_value = data["role"]
         if isinstance(role_value, str):
             role_value = role_value.lower()
+
         return cls(
             user_id=str(data["user_id"]),
             role=Role(role_value),

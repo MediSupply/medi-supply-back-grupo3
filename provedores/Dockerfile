@@ -1,8 +1,8 @@
 FROM python:3.9-slim
 WORKDIR /app
+COPY Pipfile Pipfile.lock ./
+RUN pip install pipenv && pipenv install --deploy
 COPY . /app
-RUN pip install pipenv
-RUN pipenv install
 ENV FLASK_APP=./src/main.py
 ENV PYTHONPATH=/app
 EXPOSE 5003

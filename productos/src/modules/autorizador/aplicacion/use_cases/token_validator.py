@@ -150,14 +150,14 @@ class TokenValidator:
         from ...dominio.entities.token_payload import Role
 
         try:
-            # El enum Role tiene valores en mayúsculas (ADMIN="ADMIN", USER="USER")
-            # Convertir a mayúsculas para asegurar consistencia
-            role_value = payload["role"].upper() if isinstance(payload["role"], str) else payload["role"]
+            # El enum Role tiene valores en minúsculas (ADMIN="admin", USER="user")
+            # Convertir a minúsculas para asegurar consistencia
+            role_value = payload["role"].lower() if isinstance(payload["role"], str) else payload["role"]
             # Validar que el rol sea válido
             validated_role = Role(role_value)
             # Actualizar el payload con el valor normalizado para que from_dict lo use correctamente
             payload["role"] = role_value
         except (ValueError, KeyError) as e:
             # Mostrar roles válidos
-            valid_roles = [r.value for r in Role]  # Obtener los valores del enum (ADMIN, USER, etc.)
+            valid_roles = [r.value for r in Role]  # Obtener los valores del enum (admin, user, etc.)
             raise InvalidTokenError(f"Rol '{payload['role']}' no es válido. Roles válidos: {valid_roles}")
