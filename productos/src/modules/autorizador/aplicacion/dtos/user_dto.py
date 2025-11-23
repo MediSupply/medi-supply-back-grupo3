@@ -5,8 +5,8 @@ from modules.autorizador.dominio.entities.user import Role
 
 
 class RoleDto(Enum):
-    ADMIN = "ADMIN"
-    USER = "USER"
+    ADMIN = "admin"
+    USER = "user"
 
 
 @dataclass(frozen=True)
