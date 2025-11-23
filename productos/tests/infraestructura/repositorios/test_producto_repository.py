@@ -38,6 +38,7 @@ class TestProductoRepositoryImpl:
         model.lote = "LOT-001"
         model.tiempo_estimado_entrega = "5 días"
         model.id_proveedor = "prov-001"
+        model.ubicacion = "Almacén A - Estante 3"
         return model
 
     def test_model_to_entity(self, sample_producto_model):

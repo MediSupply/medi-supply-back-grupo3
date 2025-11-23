@@ -29,6 +29,7 @@ class TestProductoService:
                 lote="LOT-001",
                 tiempo_estimado_entrega="5 días",
                 id_proveedor="prov-001",
+                ubicacion="Almacén A - Estante 1",
             ),
             Producto(
                 id="prod-002",
@@ -42,6 +43,7 @@ class TestProductoService:
                 lote="LOT-002",
                 tiempo_estimado_entrega="3 días",
                 id_proveedor="prov-002",
+                ubicacion="Almacén B - Estante 2",
             ),
         ]
         mock_producto_repository.obtener_todos.return_value = productos
@@ -71,6 +73,7 @@ class TestProductoService:
             lote="LOT-001",
             tiempo_estimado_entrega="5 días",
             id_proveedor="prov-001",
+            ubicacion="Almacén A - Estante 1",
         )
         mock_producto_repository.obtener_por_id.return_value = producto
         service = ProductoService(mock_producto_repository)
@@ -113,6 +116,7 @@ class TestProductoService:
                 lote="LOT-001",
                 tiempo_estimado_entrega="5 días",
                 id_proveedor="prov-001",
+                ubicacion="Almacén A - Estante 3",
             ),
         ]
         mock_producto_repository.obtener_por_categoria.return_value = productos
@@ -142,6 +146,7 @@ class TestProductoService:
                 lote="LOT-001",
                 tiempo_estimado_entrega="5 días",
                 id_proveedor="prov-001",
+                ubicacion="Almacén A - Estante 3",
             ),
         ]
         mock_producto_repository.buscar_por_nombre.return_value = productos

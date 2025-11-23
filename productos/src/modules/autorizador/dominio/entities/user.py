@@ -6,10 +6,10 @@ from .permission import ActionType, Permission, PermissionSet, ResourceType
 
 
 class Role(Enum):
-    ADMIN = "admin"
-    USER = "user"
-    MANAGER = "manager"
-    VIEWER = "viewer"
+    ADMIN = "ADMIN"
+    USER = "USER"
+    MANAGER = "MANAGER"
+    VIEWER = "VIEWER"
 
 
 @dataclass(frozen=True)

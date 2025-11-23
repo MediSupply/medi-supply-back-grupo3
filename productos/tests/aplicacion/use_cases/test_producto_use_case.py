@@ -30,6 +30,7 @@ class TestProductoUseCase:
                 lote="LOT-001",
                 tiempo_estimado_entrega="5 días",
                 id_proveedor="prov-001",
+                ubicacion="Almacén A - Estante 1",
             ),
         ]
         mock_service.obtener_todos_los_productos.return_value = productos
@@ -59,6 +60,7 @@ class TestProductoUseCase:
             lote="LOT-001",
             tiempo_estimado_entrega="5 días",
             id_proveedor="prov-001",
+            ubicacion="Almacén A - Estante 1",
         )
         mock_service.obtener_producto_por_id.return_value = producto
         use_case = ProductoUseCase(mock_service)
@@ -102,6 +104,7 @@ class TestProductoUseCase:
                 lote="LOT-001",
                 tiempo_estimado_entrega="5 días",
                 id_proveedor="prov-001",
+                ubicacion="Almacén A - Estante 3",
             ),
         ]
         mock_service.obtener_productos_por_categoria.return_value = productos
@@ -132,6 +135,7 @@ class TestProductoUseCase:
                 lote="LOT-001",
                 tiempo_estimado_entrega="5 días",
                 id_proveedor="prov-001",
+                ubicacion="Almacén A - Estante 3",
             ),
         ]
         mock_service.buscar_productos_por_nombre.return_value = productos

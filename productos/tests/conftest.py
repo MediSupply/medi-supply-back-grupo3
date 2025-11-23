@@ -61,6 +61,7 @@ def sample_producto():
         lote="LOT-001",
         tiempo_estimado_entrega="5 días",
         id_proveedor="prov-001",
+        ubicacion="Almacén A - Estante 3",
     )
 
 
@@ -79,6 +80,7 @@ def sample_producto_dto():
         lote="LOT-001",
         tiempo_estimado_entrega="5 días",
         id_proveedor="prov-001",
+        ubicacion="Almacén A - Estante 3",
     )
 
 

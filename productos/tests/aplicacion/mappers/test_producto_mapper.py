@@ -27,6 +27,7 @@ class TestProductoMapper:
             "lote": "LOT-001",
             "tiempo_estimado_entrega": "5 días",
             "id_proveedor": "prov-001",
+            "ubicacion": "Almacén A - Estante 3",
         }
 
         dto = ProductoMapper.json_to_dto(json_data)
@@ -50,6 +51,7 @@ class TestProductoMapper:
         assert json_data["lote"] == "LOT-001"
         assert json_data["tiempo_estimado_entrega"] == "5 días"
         assert json_data["id_proveedor"] == "prov-001"
+        assert json_data["ubicacion"] == "Almacén A - Estante 3"
 
     def test_dto_to_entity(self, sample_producto_dto):
         """Test de conversión de DTO a Entity"""
@@ -109,6 +111,7 @@ class TestProductoMapper:
             lote="LOT-999",
             tiempo_estimado_entrega="1 día",
             id_proveedor="prov-999",
+            ubicacion="Almacén E - Estante 1",
         )
 
         dto = ProductoMapper.entity_to_dto(producto)

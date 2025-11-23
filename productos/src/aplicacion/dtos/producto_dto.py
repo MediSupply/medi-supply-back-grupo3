@@ -1,15 +1,6 @@
 from dataclasses import dataclass
+from datetime import datetime
 from decimal import Decimal
-from enum import Enum
-
-
-class CategoriaDto(Enum):
-    ELECTRONICOS = "electronicos"
-    ROPA = "ropa"
-    HOGAR = "hogar"
-    DEPORTES = "deportes"
-    LIBROS = "libros"
-    OTROS = "otros"
 
 
 @dataclass(frozen=True)
@@ -21,7 +12,12 @@ class ProductoDto:
     id: str
     nombre: str
     descripcion: str
-    precio: float
-    categoria: CategoriaDto
-    stock: int
-    activo: bool = True
+    categoria: str
+    condiciones_almacenamiento: str
+    valor_unitario: float
+    cantidad_disponible: int
+    fecha_vencimiento: datetime
+    lote: str
+    tiempo_estimado_entrega: str
+    id_proveedor: str   
+    ubicacion: str
