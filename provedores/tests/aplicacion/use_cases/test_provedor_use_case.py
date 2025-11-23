@@ -3,8 +3,8 @@ Tests unitarios para ProvedorUseCase
 """
 
 from unittest.mock import MagicMock
-import pytest
 
+import pytest
 from src.aplicacion.use_cases.provedor_use_case import ProvedorUseCase
 from src.dominio.entities.provedor import Pais, Provedor
 
@@ -240,4 +240,3 @@ class TestProvedorUseCase:
         # Assert
         assert result is False
         mock_service.eliminar_provedor.assert_called_once_with(999)
-

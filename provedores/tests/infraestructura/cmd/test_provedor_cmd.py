@@ -3,16 +3,16 @@ Tests unitarios para ProvedorCmd
 """
 
 from unittest.mock import MagicMock, patch
-import pytest
 
-from src.infraestructura.cmd.provedor_cmd import ProvedorCmd
+import pytest
 from src.dominio.entities.provedor import Pais, Provedor
+from src.infraestructura.cmd.provedor_cmd import ProvedorCmd
 
 
 class TestProvedorCmd:
     """Tests para ProvedorCmd"""
 
-    @patch('src.infraestructura.cmd.provedor_cmd.ProvedorMapper')
+    @patch("src.infraestructura.cmd.provedor_cmd.ProvedorMapper")
     def test_obtener_todos_los_provedores_exitoso(self, mock_mapper, app_context):
         """Test de obtener todos los proveedores exitosamente"""
         # Arrange
@@ -29,12 +29,12 @@ class TestProvedorCmd:
             ),
         ]
         mock_use_case.obtener_todos_los_provedores.return_value = provedores
-        
+
         mock_dto = MagicMock()
         mock_dict = {"id": 1, "nombre": "Proveedor 1"}
         mock_mapper.entities_to_dtos.return_value = [mock_dto]
         mock_mapper.dtos_to_dicts.return_value = [mock_dict]
-        
+
         cmd = ProvedorCmd(mock_use_case)
 
         # Act
@@ -58,7 +58,7 @@ class TestProvedorCmd:
         assert status_code == 500
         assert "error" in response.get_json()
 
-    @patch('src.infraestructura.cmd.provedor_cmd.ProvedorMapper')
+    @patch("src.infraestructura.cmd.provedor_cmd.ProvedorMapper")
     def test_obtener_provedor_por_id_exitoso(self, mock_mapper, app_context):
         """Test de obtener proveedor por ID exitosamente"""
         # Arrange
@@ -73,12 +73,12 @@ class TestProvedorCmd:
             email="proveedor@test.com",
         )
         mock_use_case.obtener_provedor_por_id.return_value = provedor
-        
+
         mock_dto = MagicMock()
         mock_dict = {"id": 1, "nombre": "Proveedor Test"}
         mock_mapper.entity_to_dto.return_value = mock_dto
         mock_mapper.dto_to_dict.return_value = mock_dict
-        
+
         cmd = ProvedorCmd(mock_use_case)
 
         # Act
@@ -117,7 +117,7 @@ class TestProvedorCmd:
         assert status_code == 500
         assert "error" in response.get_json()
 
-    @patch('src.infraestructura.cmd.provedor_cmd.ProvedorMapper')
+    @patch("src.infraestructura.cmd.provedor_cmd.ProvedorMapper")
     def test_obtener_provedor_por_nit_exitoso(self, mock_mapper, app_context):
         """Test de obtener proveedor por NIT exitosamente"""
         # Arrange
@@ -132,12 +132,12 @@ class TestProvedorCmd:
             email="proveedor@test.com",
         )
         mock_use_case.obtener_provedor_por_nit.return_value = provedor
-        
+
         mock_dto = MagicMock()
         mock_dict = {"id": 1, "nit": 900123456}
         mock_mapper.entity_to_dto.return_value = mock_dto
         mock_mapper.dto_to_dict.return_value = mock_dict
-        
+
         cmd = ProvedorCmd(mock_use_case)
 
         # Act
@@ -176,7 +176,7 @@ class TestProvedorCmd:
         assert status_code == 500
         assert "error" in response.get_json()
 
-    @patch('src.infraestructura.cmd.provedor_cmd.ProvedorMapper')
+    @patch("src.infraestructura.cmd.provedor_cmd.ProvedorMapper")
     def test_obtener_provedores_por_pais_exitoso(self, mock_mapper, app_context):
         """Test de obtener proveedores por país exitosamente"""
         # Arrange
@@ -193,12 +193,12 @@ class TestProvedorCmd:
             ),
         ]
         mock_use_case.obtener_provedores_por_pais.return_value = provedores
-        
+
         mock_dto = MagicMock()
         mock_dict = {"id": 1, "pais": "colombia"}
         mock_mapper.entities_to_dtos.return_value = [mock_dto]
         mock_mapper.dtos_to_dicts.return_value = [mock_dict]
-        
+
         cmd = ProvedorCmd(mock_use_case)
 
         # Act
@@ -222,7 +222,7 @@ class TestProvedorCmd:
         assert status_code == 500
         assert "error" in response.get_json()
 
-    @patch('src.infraestructura.cmd.provedor_cmd.ProvedorMapper')
+    @patch("src.infraestructura.cmd.provedor_cmd.ProvedorMapper")
     def test_buscar_provedores_por_nombre_exitoso(self, mock_mapper, app_context):
         """Test de buscar proveedores por nombre exitosamente"""
         # Arrange
@@ -239,12 +239,12 @@ class TestProvedorCmd:
             ),
         ]
         mock_use_case.buscar_provedores_por_nombre.return_value = provedores
-        
+
         mock_dto = MagicMock()
         mock_dict = {"id": 1, "nombre": "Tecnología Avanzada"}
         mock_mapper.entities_to_dtos.return_value = [mock_dto]
         mock_mapper.dtos_to_dicts.return_value = [mock_dict]
-        
+
         cmd = ProvedorCmd(mock_use_case)
 
         # Act
@@ -267,4 +267,3 @@ class TestProvedorCmd:
         # Assert
         assert status_code == 500
         assert "error" in response.get_json()
-

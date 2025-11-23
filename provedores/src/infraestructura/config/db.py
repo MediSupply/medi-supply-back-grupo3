@@ -6,4 +6,3 @@ db_provedores = SQLAlchemy()
 
 def init_db_provedores(app: Flask):
     db_provedores.init_app(app)
-

@@ -3,8 +3,8 @@ Tests unitarios para ProvedorService
 """
 
 from unittest.mock import MagicMock
-import pytest
 
+import pytest
 from src.aplicacion.servicios.provedor_service import ProvedorService
 from src.dominio.entities.provedor import Pais, Provedor
 
@@ -253,4 +253,3 @@ class TestProvedorService:
         # Assert
         assert result is False
         mock_provedor_repository.eliminar.assert_called_once_with(999)
-

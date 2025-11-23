@@ -17,4 +17,3 @@ class ProvedorModel(db_provedores.Model):
 
     def __repr__(self):
         return f"<ProvedorModel {self.id}: {self.nombre}>"
-

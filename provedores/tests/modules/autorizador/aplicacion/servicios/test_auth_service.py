@@ -4,9 +4,9 @@ Tests unitarios para AuthService
 
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock
-import pytest
-import jwt
 
+import jwt
+import pytest
 from src.modules.autorizador.aplicacion.servicios.auth_service import AuthService
 from src.modules.autorizador.dominio.entities.token_payload import Role, TokenPayload
 from src.modules.autorizador.dominio.exceptions import InvalidTokenError
@@ -93,7 +93,7 @@ class TestAuthService:
         mock_request = MagicMock()
         mock_request.headers.get.side_effect = lambda key: {
             "X-Internal-Request": "true",
-            "X-Gateway-Token": "gateway-token"
+            "X-Gateway-Token": "gateway-token",
         }.get(key)
 
         result = auth_service.authorize_access(None, "/provedores", "GET", mock_request)
@@ -155,6 +155,7 @@ class TestAuthService:
         """Test de obtención de información de usuario inválido"""
         # Crear un token expirado (get_token_payload devuelve None para tokens expirados)
         from datetime import datetime, timedelta
+
         exp = datetime.utcnow() - timedelta(hours=1)
         payload = {
             "user_id": "user-001",
@@ -164,8 +165,7 @@ class TestAuthService:
         }
         token = jwt.encode(payload, secret_key, algorithm="HS256")
         header = f"Bearer {token}"
-        
+
         # get_user_info devuelve None cuando get_token_payload devuelve None
         user_info = auth_service.get_user_info(header)
         assert user_info is None
-

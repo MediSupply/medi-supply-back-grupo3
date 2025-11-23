@@ -4,9 +4,9 @@ Tests unitarios para AuthorizationService
 
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
-import pytest
-import jwt
 
+import jwt
+import pytest
 from src.modules.autorizador.aplicacion.servicios.authorization_service import AuthorizationService
 from src.modules.autorizador.dominio.entities.token_payload import Role, TokenPayload
 from src.modules.autorizador.dominio.exceptions import (
@@ -166,4 +166,3 @@ class TestAuthorizationService:
         """Test de obtención de información de usuario inválido"""
         user_info = auth_service.get_user_info("Bearer invalid.token")
         assert user_info is None
-
