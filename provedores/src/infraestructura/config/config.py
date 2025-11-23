@@ -8,7 +8,6 @@ from src.aplicacion.servicios.provedor_service import ProvedorService
 from src.aplicacion.use_cases.provedor_use_case import ProvedorUseCase
 from src.infraestructura.cmd.provedor_cmd import ProvedorCmd
 from src.infraestructura.config.db import db_provedores, init_db_provedores
-from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
 from src.infraestructura.rutas.provedor_routes import create_provedor_routes
 
 # Módulo de autorización
@@ -98,6 +97,9 @@ class Config:
 
     def _setup_dependencies(self):
         """Configura la inyección de dependencias siguiendo arquitectura hexagonal."""
+        # Importar aquí para evitar importación circular
+        from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Capa de Infraestructura
         provedor_repository = ProvedorRepositoryImpl()
         # Capa de Dominio

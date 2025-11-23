@@ -80,7 +80,7 @@ class TestTokenValidator:
         token_payload = validator.validate_token(token)
 
         assert token_payload.user_id == "user-001"
-        assert token_payload.role.value == "ADMIN"
+        assert token_payload.role.name == "ADMIN"
 
     def test_validate_token_expired(self, validator, secret_key):
         """Test de validación de token expirado"""
