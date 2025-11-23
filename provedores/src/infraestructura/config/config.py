@@ -7,6 +7,7 @@ from flask import Flask, g, request
 from src.aplicacion.servicios.provedor_service import ProvedorService
 from src.aplicacion.use_cases.provedor_use_case import ProvedorUseCase
 from src.infraestructura.cmd.provedor_cmd import ProvedorCmd
+from src.infraestructura.config.db import db_provedores, init_db_provedores
 from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
 from src.infraestructura.rutas.provedor_routes import create_provedor_routes
 
@@ -55,6 +56,13 @@ class Config:
         self.app.config["HOST"] = os.getenv("HOST", "0.0.0.0")
         self.app.config["PORT"] = int(os.getenv("PORT", 5003))
         self.app.config["LOG_LEVEL"] = os.getenv("LOG_LEVEL", "INFO")
+
+        # Configuración de base de datos
+        self.app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI", "sqlite:///instance/provedores.db")
+        self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+        # Inicializar base de datos
+        init_db_provedores(self.app)
 
         # Configuración JWT para autorización
         self.app.config["JWT_SECRET"] = os.getenv("JWT_SECRET", "your-secret-key-here")

@@ -126,4 +126,5 @@ class AccessValidator:
         for resource, actions in permissions.items():
             formatted_permissions[resource.value] = [action.value for action in actions]
 
-        return {"role": token_payload.role.value, "permissions": formatted_permissions, "user_id": token_payload.user_id}
+        # Devolver el nombre del enum en mayúsculas (ADMIN, MANAGER, etc.)
+        return {"role": token_payload.role.name, "permissions": formatted_permissions, "user_id": token_payload.user_id}
