@@ -148,6 +148,7 @@ class TokenValidator:
 
         # Validar que el role sea válido usando el enum Role
         from ...dominio.entities.token_payload import Role
+
         try:
             # El enum Role tiene valores en mayúsculas (ADMIN="ADMIN", USER="USER")
             # Convertir a mayúsculas para asegurar consistencia

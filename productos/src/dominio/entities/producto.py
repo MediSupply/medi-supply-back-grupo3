@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import datetime
 from typing import Any, Dict
 
+
 @dataclass(frozen=True)
 class Producto:
     """

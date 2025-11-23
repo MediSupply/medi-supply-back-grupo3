@@ -138,7 +138,7 @@ class TestProductoDto:
             id_proveedor="prov-001",
             ubicacion="Almacén A - Estante 1",
         )
-        
+
         producto2 = ProductoDto(
             id="prod-011",
             nombre="Producto 2",

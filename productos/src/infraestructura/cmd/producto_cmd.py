@@ -19,23 +19,23 @@ class ProductoCmd:
             productos_dto = [ProductoMapper.entity_to_dto(p) for p in productos]
             productos_json = [ProductoMapper.dto_to_json(p) for p in productos_dto]
 
-            return jsonify( productos_json), 200
+            return jsonify(productos_json), 200
         except Exception as e:
-            return jsonify({ "error": str(e)}), 500
+            return jsonify({"error": str(e)}), 500
 
     def obtener_producto_por_id(self, producto_id: str):
         """Obtiene un producto por su ID."""
         try:
             producto = self.producto_use_case.obtener_producto_por_id(producto_id)
             if not producto:
-                return jsonify({ "error": "Producto no encontrado"}), 404
+                return jsonify({"error": "Producto no encontrado"}), 404
 
             producto_dto = ProductoMapper.entity_to_dto(producto)
             producto_json = ProductoMapper.dto_to_json(producto_dto)
 
-            return jsonify( producto_json), 200
+            return jsonify(producto_json), 200
         except Exception as e:
-            return jsonify({ "error": str(e)}), 500
+            return jsonify({"error": str(e)}), 500
 
     def obtener_productos_por_categoria(self, categoria: str):
         """Obtiene productos por categoría."""
@@ -45,11 +45,11 @@ class ProductoCmd:
             productos_json = [ProductoMapper.dto_to_json(p) for p in productos_dto]
 
             return (
-                jsonify( productos_json),
+                jsonify(productos_json),
                 200,
             )
         except Exception as e:
-            return jsonify({ "error": str(e)}), 500
+            return jsonify({"error": str(e)}), 500
 
     def buscar_productos_por_nombre(self, nombre: str):
         """Busca productos por nombre."""
@@ -58,6 +58,6 @@ class ProductoCmd:
             productos_dto = [ProductoMapper.entity_to_dto(p) for p in productos]
             productos_json = [ProductoMapper.dto_to_json(p) for p in productos_dto]
 
-            return jsonify( productos_json), 200
+            return jsonify(productos_json), 200
         except Exception as e:
-            return jsonify({ "error": str(e)}), 500
+            return jsonify({"error": str(e)}), 500
