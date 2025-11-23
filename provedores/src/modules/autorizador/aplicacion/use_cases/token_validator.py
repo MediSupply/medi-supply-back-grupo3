@@ -153,6 +153,6 @@ class TokenValidator:
         valid_roles = ["admin", "manager", "user", "viewer"]
         if role_value not in valid_roles:
             raise InvalidTokenError(f"Rol '{payload['role']}' no es válido")
-        
+
         # Normalizar el rol en el payload para que from_dict funcione correctamente
         payload["role"] = role_value
