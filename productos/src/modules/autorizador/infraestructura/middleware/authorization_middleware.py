@@ -45,7 +45,7 @@ class AuthorizationMiddleware:
 
         logger = logging.getLogger(__name__)
         logger.info(f"Validating access for {method} {route}")
-        
+
         # Log si hay o no token (sin exponer el token)
         if authorization_header:
             token_preview = authorization_header[:20] + "..." if len(authorization_header) > 20 else authorization_header
@@ -57,7 +57,9 @@ class AuthorizationMiddleware:
         authorized = self.auth_service.authorize_access(authorization_header, route, method, request)
 
         if not authorized:
-            logger.warning(f"Unauthorized access attempt to {method} {route} - Authorization header present: {authorization_header is not None}")
+            logger.warning(
+                f"Unauthorized access attempt to {method} {route} - Authorization header present: {authorization_header is not None}"
+            )
             return (
                 jsonify(
                     {

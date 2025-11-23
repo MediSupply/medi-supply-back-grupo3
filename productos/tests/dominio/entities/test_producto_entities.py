@@ -27,7 +27,7 @@ class TestProductoEntity:
     def test_producto_entity_to_dict(self, sample_producto):
         """Test del método to_dict de Producto"""
         producto_dict = sample_producto.to_dict()
-        
+
         assert isinstance(producto_dict, dict)
         assert producto_dict["id"] == "prod-001"
         assert producto_dict["nombre"] == "Laptop"
@@ -156,7 +156,7 @@ class TestProductoEntity:
             id_proveedor="prov-001",
             ubicacion="Almacén A - Estante 1",
         )
-        
+
         producto2 = Producto(
             id="prod-011",
             nombre="Producto 2",

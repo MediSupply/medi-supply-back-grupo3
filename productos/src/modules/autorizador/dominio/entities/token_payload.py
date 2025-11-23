@@ -35,7 +35,7 @@ class TokenPayload:
         role_value = data["role"]
         if isinstance(role_value, str):
             role_value = role_value.upper()
-        
+
         return cls(
             user_id=str(data["user_id"]),
             role=Role(role_value),

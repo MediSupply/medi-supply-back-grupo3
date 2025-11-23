@@ -75,11 +75,7 @@ class ProductoRepositoryImpl(ProductoRepository):
     def buscar_por_nombre(self, nombre: str) -> List[Producto]:
         """Busca productos por nombre."""
         try:
-            models = (
-                db_productos.session.query(ProductoModel)
-                .filter(ProductoModel.nombre.ilike(f"%{nombre}%"))
-                .all()
-            )
+            models = db_productos.session.query(ProductoModel).filter(ProductoModel.nombre.ilike(f"%{nombre}%")).all()
             return [self._model_to_entity(model) for model in models]
         except Exception as e:
             print(f"Error buscando productos por nombre: {e}")

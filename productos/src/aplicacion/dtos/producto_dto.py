@@ -19,5 +19,5 @@ class ProductoDto:
     fecha_vencimiento: datetime
     lote: str
     tiempo_estimado_entrega: str
-    id_proveedor: str   
+    id_proveedor: str
     ubicacion: str

@@ -99,8 +99,9 @@ class AuthService:
             bool: True si el acceso está autorizado
         """
         import logging
+
         logger = logging.getLogger(__name__)
-        
+
         try:
             # Verificar si es ruta pública primero
             if self.access_validator._is_public_route(route):
