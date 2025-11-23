@@ -16,6 +16,7 @@ pyjwt = "*"
 pytest = "*"
 pytest-cov = "*"
 black = "*"
+isort = "*"
 
 [requires]
 python_version = "3.9"

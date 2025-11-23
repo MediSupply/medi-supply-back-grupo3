@@ -5,10 +5,10 @@ from datetime import datetime
 from dotenv import load_dotenv
 from flask import Flask, g, request
 from flask_cors import CORS
-from src.infraestructura.config.db import db_productos, init_db_productos
 from src.aplicacion.servicios.producto_service import ProductoService
 from src.aplicacion.use_cases.producto_use_case import ProductoUseCase
 from src.infraestructura.cmd.producto_cmd import ProductoCmd
+from src.infraestructura.config.db import db_productos, init_db_productos
 from src.infraestructura.repositorios.producto_repository import ProductoRepositoryImpl
 from src.infraestructura.rutas.producto_routes import create_producto_routes
 

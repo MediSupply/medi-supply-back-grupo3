@@ -3,8 +3,8 @@ Tests unitarios para los DTOs del módulo de productos
 """
 
 from datetime import datetime
-import pytest
 
+import pytest
 from src.aplicacion.dtos.producto_dto import ProductoDto
 
 
