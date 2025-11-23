@@ -53,12 +53,21 @@ jobs:
           pytest \
             --cov=gateway/src \
             --cov-report=term-missing \
-            --cov-report=html \
-            --cov-report=json \
-            --cov-report=xml \
+            --cov-report=html:htmlcov \
+            --cov-report=json:coverage.json \
+            --cov-report=xml:coverage.xml \
             --junitxml=junit.xml \
             gateway/tests/ \
             -v
+
+      - name: Verificar que coverage.json existe
+        run: |
+          if [ ! -f "coverage.json" ]; then
+            echo "❌ ERROR: coverage.json no fue generado"
+            ls -la *.json *.xml 2>/dev/null || echo "No se encontraron archivos de coverage"
+            exit 1
+          fi
+          echo "✅ coverage.json encontrado"
 
       - name: Verificar coverage global mínimo del 80%
         run: |
@@ -66,13 +75,34 @@ jobs:
           python3 << 'EOF'
           import json
           import sys
+          import os
           
           COVERAGE_FILE = "coverage.json"
           MIN_COVERAGE = 80
           
+          # Verificar que el archivo existe
+          if not os.path.exists(COVERAGE_FILE):
+              print(f"❌ ERROR: No se encontró el archivo de coverage: {COVERAGE_FILE}")
+              print(f"Archivos en el directorio actual:")
+              for f in os.listdir('.'):
+                  if 'coverage' in f.lower() or f.endswith('.json'):
+                      print(f"  - {f}")
+              sys.exit(1)
+          
           try:
               with open(COVERAGE_FILE, 'r') as f:
                   data = json.load(f)
+              
+              # Verificar estructura del JSON
+              if 'totals' not in data:
+                  print(f"❌ ERROR: El archivo coverage.json no tiene la estructura esperada")
+                  print(f"Claves disponibles: {list(data.keys())}")
+                  sys.exit(1)
+              
+              if 'percent_covered' not in data['totals']:
+                  print(f"❌ ERROR: No se encontró 'percent_covered' en totals")
+                  print(f"Claves en totals: {list(data['totals'].keys())}")
+                  sys.exit(1)
               
               total_coverage = data['totals']['percent_covered']
               
@@ -89,10 +119,16 @@ jobs:
                   print(f"   Diferencia: {MIN_COVERAGE - total_coverage:.1f}%")
                   sys.exit(1)
                   
-          except FileNotFoundError:
-              print(f"❌ ERROR: No se encontró el archivo de coverage: {COVERAGE_FILE}")
+          except json.JSONDecodeError as e:
+              print(f"❌ ERROR: El archivo coverage.json no es un JSON válido: {e}")
+              sys.exit(1)
+          except KeyError as e:
+              print(f"❌ ERROR: Clave faltante en coverage.json: {e}")
+              print(f"Estructura del archivo: {json.dumps(data, indent=2)[:500]}")
               sys.exit(1)
           except Exception as e:
               print(f"❌ ERROR al procesar coverage: {e}")
+              import traceback
+              traceback.print_exc()
               sys.exit(1)
           EOF
