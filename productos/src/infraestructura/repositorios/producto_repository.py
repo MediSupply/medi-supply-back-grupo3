@@ -1,88 +1,86 @@
-from decimal import Decimal
 from typing import List, Optional
 
-from src.dominio.entities.producto import Categoria, Producto
+from src.dominio.entities.producto import Producto
 from src.dominio.repositorios.producto_repository import ProductoRepository
+from src.infraestructura.config.db import db_productos
+from src.infraestructura.dto.producto import ProductoModel
 
 
 class ProductoRepositoryImpl(ProductoRepository):
-    """Implementación del repositorio de productos con datos en memoria."""
+    """Implementación del repositorio de productos con base de datos SQLAlchemy."""
 
-    def __init__(self):
-        # Datos de ejemplo en memoria
-        self._productos = [
-            Producto(
-                id="1",
-                nombre="iPhone 15",
-                descripcion="Último modelo de iPhone con cámara mejorada",
-                precio=Decimal("999.99"),
-                categoria=Categoria.ELECTRONICOS,
-                stock=50,
-                activo=True,
-            ),
-            Producto(
-                id="2",
-                nombre="Samsung Galaxy S24",
-                descripcion="Smartphone Android de última generación",
-                precio=Decimal("899.99"),
-                categoria=Categoria.ELECTRONICOS,
-                stock=30,
-                activo=True,
-            ),
-            Producto(
-                id="3",
-                nombre="Camiseta Nike",
-                descripcion="Camiseta deportiva de algodón",
-                precio=Decimal("29.99"),
-                categoria=Categoria.ROPA,
-                stock=100,
-                activo=True,
-            ),
-            Producto(
-                id="4",
-                nombre="Sofá 3 plazas",
-                descripcion="Sofá cómodo para sala de estar",
-                precio=Decimal("599.99"),
-                categoria=Categoria.HOGAR,
-                stock=10,
-                activo=True,
-            ),
-            Producto(
-                id="5",
-                nombre="Pelota de Fútbol",
-                descripcion="Pelota oficial de fútbol",
-                precio=Decimal("24.99"),
-                categoria=Categoria.DEPORTES,
-                stock=75,
-                activo=True,
-            ),
-            Producto(
-                id="6",
-                nombre="Clean Code",
-                descripcion="Libro sobre buenas prácticas de programación",
-                precio=Decimal("39.99"),
-                categoria=Categoria.LIBROS,
-                stock=25,
-                activo=True,
-            ),
-        ]
+    def _model_to_entity(self, model: ProductoModel) -> Producto:
+        """Convierte un modelo de base de datos a una entidad del dominio."""
+        return Producto(
+            id=model.id,
+            nombre=model.nombre,
+            descripcion=model.descripcion,
+            categoria=model.categoria,
+            condiciones_almacenamiento=model.condiciones_almacenamiento,
+            valor_unitario=model.valor_unitario,
+            cantidad_disponible=model.cantidad_disponible,
+            fecha_vencimiento=model.fecha_vencimiento,
+            lote=model.lote,
+            tiempo_estimado_entrega=model.tiempo_estimado_entrega,
+            id_proveedor=model.id_proveedor,
+            ubicacion=model.ubicacion,
+        )
+
+    def _entity_to_model(self, entity: Producto) -> ProductoModel:
+        """Convierte una entidad del dominio a un modelo de base de datos."""
+        return ProductoModel(
+            id=entity.id,
+            nombre=entity.nombre,
+            descripcion=entity.descripcion,
+            categoria=entity.categoria,
+            condiciones_almacenamiento=entity.condiciones_almacenamiento,
+            valor_unitario=entity.valor_unitario,
+            cantidad_disponible=entity.cantidad_disponible,
+            fecha_vencimiento=entity.fecha_vencimiento,
+            lote=entity.lote,
+            tiempo_estimado_entrega=entity.tiempo_estimado_entrega,
+            id_proveedor=entity.id_proveedor,
+            ubicacion=entity.ubicacion,
+        )
 
     def obtener_todos(self) -> List[Producto]:
         """Obtiene todos los productos."""
-        return self._productos.copy()
+        try:
+            models = db_productos.session.query(ProductoModel).all()
+            return [self._model_to_entity(model) for model in models]
+        except Exception as e:
+            print(f"Error obteniendo todos los productos: {e}")
+            return []
 
     def obtener_por_id(self, producto_id: str) -> Optional[Producto]:
         """Obtiene un producto por su ID."""
-        for producto in self._productos:
-            if producto.id == producto_id:
-                return producto
-        return None
+        try:
+            model = db_productos.session.query(ProductoModel).filter_by(id=producto_id).first()
+            if model:
+                return self._model_to_entity(model)
+            return None
+        except Exception as e:
+            print(f"Error obteniendo producto por ID: {e}")
+            return None
 
     def obtener_por_categoria(self, categoria: str) -> List[Producto]:
         """Obtiene productos por categoría."""
-        return [p for p in self._productos if p.categoria.value == categoria]
+        try:
+            models = db_productos.session.query(ProductoModel).filter_by(categoria=categoria).all()
+            return [self._model_to_entity(model) for model in models]
+        except Exception as e:
+            print(f"Error obteniendo productos por categoría: {e}")
+            return []
 
     def buscar_por_nombre(self, nombre: str) -> List[Producto]:
         """Busca productos por nombre."""
-        nombre_lower = nombre.lower()
-        return [p for p in self._productos if nombre_lower in p.nombre.lower()]
+        try:
+            models = (
+                db_productos.session.query(ProductoModel)
+                .filter(ProductoModel.nombre.ilike(f"%{nombre}%"))
+                .all()
+            )
+            return [self._model_to_entity(model) for model in models]
+        except Exception as e:
+            print(f"Error buscando productos por nombre: {e}")
+            return []

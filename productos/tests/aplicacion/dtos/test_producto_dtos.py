@@ -2,170 +2,157 @@
 Tests unitarios para los DTOs del módulo de productos
 """
 
-import os
-import sys
-
+from datetime import datetime
 import pytest
 
-# Agregar el directorio de productos al path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "src"))
+from src.aplicacion.dtos.producto_dto import ProductoDto
 
 
 class TestProductoDto:
     """Tests para el ProductoDto"""
 
-    def test_producto_dto_creation(self):
+    def test_producto_dto_creation(self, sample_producto_dto):
         """Test de creación del ProductoDto"""
-        from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
+        assert sample_producto_dto.id == "prod-001"
+        assert sample_producto_dto.nombre == "Laptop"
+        assert sample_producto_dto.descripcion == "Laptop gaming de alta gama"
+        assert sample_producto_dto.valor_unitario == 1500.00
+        assert sample_producto_dto.categoria == "electronicos"
+        assert sample_producto_dto.cantidad_disponible == 10
+        assert sample_producto_dto.condiciones_almacenamiento == "Temperatura ambiente"
+        assert sample_producto_dto.lote == "LOT-001"
+        assert sample_producto_dto.tiempo_estimado_entrega == "5 días"
+        assert sample_producto_dto.id_proveedor == "prov-001"
 
-        producto_dto = ProductoDto(
-            id="prod-001",
-            nombre="Laptop",
-            descripcion="Laptop gaming de alta gama",
-            precio=1500.00,
-            categoria=CategoriaDto.ELECTRONICOS,
-            stock=10,
-            activo=True,
-        )
-
-        assert producto_dto.id == "prod-001"
-        assert producto_dto.nombre == "Laptop"
-        assert producto_dto.descripcion == "Laptop gaming de alta gama"
-        assert producto_dto.precio == 1500.00
-        assert producto_dto.categoria == CategoriaDto.ELECTRONICOS
-        assert producto_dto.stock == 10
-        assert producto_dto.activo is True
-
-    def test_producto_dto_default_active(self):
-        """Test de creación con activo por defecto"""
-        from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
-
-        producto_dto = ProductoDto(
-            id="prod-002",
-            nombre="Camiseta",
-            descripcion="Camiseta de algodón",
-            precio=25.99,
-            categoria=CategoriaDto.ROPA,
-            stock=50,
-        )
-
-        assert producto_dto.activo is True  # Valor por defecto
-
-    def test_producto_dto_immutable(self):
+    def test_producto_dto_immutable(self, sample_producto_dto):
         """Test de que ProductoDto es inmutable"""
-        from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
-
-        producto_dto = ProductoDto(
-            id="prod-003",
-            nombre="Libro",
-            descripcion="Libro de programación",
-            precio=45.50,
-            categoria=CategoriaDto.LIBROS,
-            stock=20,
-        )
-
         # Verificar que es inmutable (frozen dataclass)
         with pytest.raises(AttributeError):
-            producto_dto.nombre = "Nuevo Libro"
-
-    def test_producto_dto_categoria_enum(self):
-        """Test de los valores del enum CategoriaDto"""
-        from src.aplicacion.dtos.producto_dto import CategoriaDto
-
-        assert CategoriaDto.ELECTRONICOS.value == "electronicos"
-        assert CategoriaDto.ROPA.value == "ropa"
-        assert CategoriaDto.HOGAR.value == "hogar"
-        assert CategoriaDto.DEPORTES.value == "deportes"
-        assert CategoriaDto.LIBROS.value == "libros"
-        assert CategoriaDto.OTROS.value == "otros"
+            sample_producto_dto.nombre = "Nueva Laptop"
 
     def test_producto_dto_different_categories(self):
         """Test de diferentes categorías"""
-        from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
-
         # Test ELECTRONICOS
         laptop = ProductoDto(
             id="prod-004",
             nombre="Smartphone",
             descripcion="Teléfono inteligente",
-            precio=800.00,
-            categoria=CategoriaDto.ELECTRONICOS,
-            stock=15,
+            categoria="electronicos",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=800.00,
+            cantidad_disponible=15,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-004",
+            tiempo_estimado_entrega="3 días",
+            id_proveedor="prov-001",
+            ubicacion="Almacén B - Estante 1",
         )
-        assert laptop.categoria == CategoriaDto.ELECTRONICOS
+        assert laptop.categoria == "electronicos"
 
         # Test DEPORTES
         pelota = ProductoDto(
             id="prod-005",
             nombre="Pelota de fútbol",
             descripcion="Pelota oficial",
-            precio=30.00,
-            categoria=CategoriaDto.DEPORTES,
-            stock=25,
+            categoria="deportes",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=30.00,
+            cantidad_disponible=25,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-005",
+            tiempo_estimado_entrega="2 días",
+            id_proveedor="prov-002",
+            ubicacion="Almacén C - Estante 5",
         )
-        assert pelota.categoria == CategoriaDto.DEPORTES
+        assert pelota.categoria == "deportes"
 
         # Test OTROS
         misc = ProductoDto(
             id="prod-006",
             nombre="Producto Varios",
             descripcion="Producto misceláneo",
-            precio=10.00,
-            categoria=CategoriaDto.OTROS,
-            stock=100,
+            categoria="otros",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=10.00,
+            cantidad_disponible=100,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-006",
+            tiempo_estimado_entrega="1 día",
+            id_proveedor="prov-003",
+            ubicacion="Almacén D - Estante 2",
         )
-        assert misc.categoria == CategoriaDto.OTROS
+        assert misc.categoria == "otros"
 
     def test_producto_dto_float_precision(self):
         """Test de precisión float en precios"""
-        from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
-
         producto_dto = ProductoDto(
             id="prod-007",
             nombre="Producto Preciso",
             descripcion="Producto con precio preciso",
-            precio=99.99,
-            categoria=CategoriaDto.OTROS,
-            stock=1,
+            categoria="otros",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=99.99,
+            cantidad_disponible=1,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-007",
+            tiempo_estimado_entrega="1 día",
+            id_proveedor="prov-001",
+            ubicacion="Almacén A - Estante 1",
         )
 
-        assert producto_dto.precio == 99.99
-        assert isinstance(producto_dto.precio, float)
-
-    def test_producto_dto_inactive(self):
-        """Test de producto inactivo"""
-        from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
-
-        producto_dto = ProductoDto(
-            id="prod-008",
-            nombre="Producto Descontinuado",
-            descripcion="Producto que ya no se vende",
-            precio=50.00,
-            categoria=CategoriaDto.OTROS,
-            stock=0,
-            activo=False,
-        )
-
-        assert producto_dto.activo is False
-        assert producto_dto.stock == 0
+        assert producto_dto.valor_unitario == 99.99
+        assert isinstance(producto_dto.valor_unitario, float)
 
     def test_producto_dto_zero_stock(self):
         """Test de producto con stock cero"""
-        from src.aplicacion.dtos.producto_dto import CategoriaDto, ProductoDto
-
         producto_dto = ProductoDto(
             id="prod-009",
             nombre="Producto Agotado",
             descripcion="Producto sin stock",
-            precio=25.00,
-            categoria=CategoriaDto.HOGAR,
-            stock=0,
-            activo=True,
+            categoria="hogar",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=25.00,
+            cantidad_disponible=0,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-009",
+            tiempo_estimado_entrega="1 día",
+            id_proveedor="prov-001",
+            ubicacion="Almacén A - Estante 4",
         )
 
-        assert producto_dto.stock == 0
-        assert producto_dto.activo is True  # Puede estar activo pero sin stock
+        assert producto_dto.cantidad_disponible == 0
 
+    def test_producto_dto_with_different_providers(self):
+        """Test de productos con diferentes proveedores"""
+        producto1 = ProductoDto(
+            id="prod-010",
+            nombre="Producto 1",
+            descripcion="Descripción",
+            categoria="otros",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=100.00,
+            cantidad_disponible=10,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-010",
+            tiempo_estimado_entrega="1 día",
+            id_proveedor="prov-001",
+            ubicacion="Almacén A - Estante 1",
+        )
+        
+        producto2 = ProductoDto(
+            id="prod-011",
+            nombre="Producto 2",
+            descripcion="Descripción",
+            categoria="otros",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=200.00,
+            cantidad_disponible=20,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-011",
+            tiempo_estimado_entrega="2 días",
+            id_proveedor="prov-002",
+            ubicacion="Almacén B - Estante 2",
+        )
 
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+        assert producto1.id_proveedor == "prov-001"
+        assert producto2.id_proveedor == "prov-002"

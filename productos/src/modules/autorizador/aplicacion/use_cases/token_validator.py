@@ -146,7 +146,17 @@ class TokenValidator:
         if not isinstance(payload["exp"], (int, float)):
             raise InvalidTokenError("exp debe ser timestamp numérico")
 
-        # Validar que el role sea válido
-        valid_roles = ["admin", "manager", "user", "viewer"]
-        if payload["role"] not in valid_roles:
-            raise InvalidTokenError(f"Rol '{payload['role']}' no es válido")
+        # Validar que el role sea válido usando el enum Role
+        from ...dominio.entities.token_payload import Role
+        try:
+            # El enum Role tiene valores en mayúsculas (ADMIN="ADMIN", USER="USER")
+            # Convertir a mayúsculas para asegurar consistencia
+            role_value = payload["role"].upper() if isinstance(payload["role"], str) else payload["role"]
+            # Validar que el rol sea válido
+            validated_role = Role(role_value)
+            # Actualizar el payload con el valor normalizado para que from_dict lo use correctamente
+            payload["role"] = role_value
+        except (ValueError, KeyError) as e:
+            # Mostrar roles válidos
+            valid_roles = [r.value for r in Role]  # Obtener los valores del enum (ADMIN, USER, etc.)
+            raise InvalidTokenError(f"Rol '{payload['role']}' no es válido. Roles válidos: {valid_roles}")

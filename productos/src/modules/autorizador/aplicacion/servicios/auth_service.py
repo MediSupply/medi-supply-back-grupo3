@@ -98,46 +98,52 @@ class AuthService:
         Returns:
             bool: True si el acceso está autorizado
         """
+        import logging
+        logger = logging.getLogger(__name__)
+        
         try:
             # Verificar si es ruta pública primero
             if self.access_validator._is_public_route(route):
+                logger.debug(f"Public route {route}, allowing access")
                 return True
 
             # Verificar si es petición interna (del Gateway)
             if request and self.access_validator._is_internal_request(request):
                 # Para peticiones internas, permitir acceso si es de red interna
                 # Esto permite que el Gateway acceda sin token cuando valida internamente
+                logger.debug(f"Internal request detected for {route}, allowing access")
                 return True
+
+            # Log si hay o no header de autorización
+            if not authorization_header:
+                logger.warning(f"No authorization header provided for {method} {route}")
+                return False
 
             # Obtener payload del token (incluye validación completa)
             # Esto puede lanzar InvalidTokenError si el header está malformado
+            logger.debug(f"Attempting to validate token for {method} {route}")
             token_payload = self.get_token_payload(authorization_header)
 
             if not token_payload:
+                logger.warning(f"Token validation failed: token_payload is None for {method} {route}")
                 return False
+
+            logger.debug(f"Token validated successfully for user {token_payload.user_id} with role {token_payload.role.value}")
 
             # Validar acceso por rol
             self.access_validator.validate_access(token_payload, route, method)
+            logger.info(f"Access granted for {method} {route} to user {token_payload.user_id}")
             return True
 
         except InvalidTokenError as e:
             # Token malformado - loggear y denegar acceso
-            import logging
-
-            logger = logging.getLogger(__name__)
             logger.warning(f"Malformed token for {method} {route}: {str(e)}")
             return False
         except InsufficientPermissionsError as e:
-            import logging
-
-            logger = logging.getLogger(__name__)
             logger.warning(f"Access denied for {method} {route}: {str(e)}")
             return False
         except Exception as e:
-            import logging
-
-            logger = logging.getLogger(__name__)
-            logger.error(f"Unexpected error in access authorization for {method} {route}: {str(e)}")
+            logger.error(f"Unexpected error in access authorization for {method} {route}: {str(e)}", exc_info=True)
             return False
 
     def get_user_info(self, authorization_header: Optional[str]) -> Optional[dict]:

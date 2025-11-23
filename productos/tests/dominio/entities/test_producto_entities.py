@@ -2,178 +2,175 @@
 Tests unitarios para las entidades del módulo de productos
 """
 
-import os
-import sys
-from decimal import Decimal
-
+from datetime import datetime
 import pytest
 
-# Agregar el directorio de productos al path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "src"))
+from src.dominio.entities.producto import Producto
 
 
 class TestProductoEntity:
     """Tests para la entidad Producto"""
 
-    def test_producto_entity_creation(self):
+    def test_producto_entity_creation(self, sample_producto):
         """Test de creación de la entidad Producto"""
-        from src.dominio.entities.producto import Categoria, Producto
+        assert sample_producto.id == "prod-001"
+        assert sample_producto.nombre == "Laptop"
+        assert sample_producto.descripcion == "Laptop gaming de alta gama"
+        assert sample_producto.valor_unitario == 1500.00
+        assert sample_producto.categoria == "electronicos"
+        assert sample_producto.cantidad_disponible == 10
+        assert sample_producto.condiciones_almacenamiento == "Temperatura ambiente"
+        assert sample_producto.lote == "LOT-001"
+        assert sample_producto.tiempo_estimado_entrega == "5 días"
+        assert sample_producto.id_proveedor == "prov-001"
 
-        producto = Producto(
-            id="prod-001",
-            nombre="Laptop",
-            descripcion="Laptop gaming de alta gama",
-            precio=Decimal("1500.00"),
-            categoria=Categoria.ELECTRONICOS,
-            stock=10,
-            activo=True,
-        )
-
-        assert producto.id == "prod-001"
-        assert producto.nombre == "Laptop"
-        assert producto.descripcion == "Laptop gaming de alta gama"
-        assert producto.precio == Decimal("1500.00")
-        assert producto.categoria == Categoria.ELECTRONICOS
-        assert producto.stock == 10
-        assert producto.activo is True
-
-    def test_producto_entity_default_active(self):
-        """Test de creación con activo por defecto"""
-        from src.dominio.entities.producto import Categoria, Producto
-
-        producto = Producto(
-            id="prod-002",
-            nombre="Camiseta",
-            descripcion="Camiseta de algodón",
-            precio=Decimal("25.99"),
-            categoria=Categoria.ROPA,
-            stock=50,
-        )
-
-        assert producto.activo is True  # Valor por defecto
-
-    def test_producto_entity_to_dict(self):
+    def test_producto_entity_to_dict(self, sample_producto):
         """Test del método to_dict de Producto"""
-        from src.dominio.entities.producto import Categoria, Producto
-
-        producto = Producto(
-            id="prod-003",
-            nombre="Libro",
-            descripcion="Libro de programación",
-            precio=Decimal("45.50"),
-            categoria=Categoria.LIBROS,
-            stock=20,
-            activo=True,
-        )
-
-        producto_dict = producto.to_dict()
+        producto_dict = sample_producto.to_dict()
+        
         assert isinstance(producto_dict, dict)
-        assert producto_dict["id"] == "prod-003"
-        assert producto_dict["nombre"] == "Libro"
-        assert producto_dict["descripcion"] == "Libro de programación"
-        assert producto_dict["precio"] == 45.50  # Convertido a float
-        assert producto_dict["categoria"] == "libros"
-        assert producto_dict["stock"] == 20
-        assert producto_dict["activo"] is True
+        assert producto_dict["id"] == "prod-001"
+        assert producto_dict["nombre"] == "Laptop"
+        assert producto_dict["descripcion"] == "Laptop gaming de alta gama"
+        assert producto_dict["valor_unitario"] == 1500.00
+        assert producto_dict["categoria"] == "electronicos"
+        assert producto_dict["cantidad_disponible"] == 10
+        assert producto_dict["condiciones_almacenamiento"] == "Temperatura ambiente"
+        assert producto_dict["lote"] == "LOT-001"
+        assert producto_dict["tiempo_estimado_entrega"] == "5 días"
+        assert producto_dict["id_proveedor"] == "prov-001"
+        assert producto_dict["ubicacion"] == "Almacén A - Estante 3"
+        assert isinstance(producto_dict["fecha_vencimiento"], datetime)
 
-    def test_producto_entity_immutable(self):
+    def test_producto_entity_immutable(self, sample_producto):
         """Test de que Producto es inmutable"""
-        from src.dominio.entities.producto import Categoria, Producto
-
-        producto = Producto(
-            id="prod-004",
-            nombre="Mesa",
-            descripcion="Mesa de madera",
-            precio=Decimal("200.00"),
-            categoria=Categoria.HOGAR,
-            stock=5,
-        )
-
         # Verificar que es inmutable (frozen dataclass)
         with pytest.raises(AttributeError):
-            producto.nombre = "Nueva Mesa"
-
-    def test_producto_categoria_enum(self):
-        """Test de los valores del enum Categoria"""
-        from src.dominio.entities.producto import Categoria
-
-        assert Categoria.ELECTRONICOS.value == "electronicos"
-        assert Categoria.ROPA.value == "ropa"
-        assert Categoria.HOGAR.value == "hogar"
-        assert Categoria.DEPORTES.value == "deportes"
-        assert Categoria.LIBROS.value == "libros"
-        assert Categoria.OTROS.value == "otros"
+            sample_producto.nombre = "Nueva Laptop"
 
     def test_producto_different_categories(self):
         """Test de diferentes categorías"""
-        from src.dominio.entities.producto import Categoria, Producto
-
         # Test ELECTRONICOS
         laptop = Producto(
             id="prod-005",
             nombre="Smartphone",
             descripcion="Teléfono inteligente",
-            precio=Decimal("800.00"),
-            categoria=Categoria.ELECTRONICOS,
-            stock=15,
+            categoria="electronicos",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=800.00,
+            cantidad_disponible=15,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-005",
+            tiempo_estimado_entrega="3 días",
+            id_proveedor="prov-001",
+            ubicacion="Almacén B - Estante 1",
         )
-        assert laptop.categoria == Categoria.ELECTRONICOS
+        assert laptop.categoria == "electronicos"
 
         # Test DEPORTES
         pelota = Producto(
             id="prod-006",
             nombre="Pelota de fútbol",
             descripcion="Pelota oficial",
-            precio=Decimal("30.00"),
-            categoria=Categoria.DEPORTES,
-            stock=25,
+            categoria="deportes",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=30.00,
+            cantidad_disponible=25,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-006",
+            tiempo_estimado_entrega="2 días",
+            id_proveedor="prov-002",
+            ubicacion="Almacén C - Estante 5",
         )
-        assert pelota.categoria == Categoria.DEPORTES
+        assert pelota.categoria == "deportes"
 
         # Test OTROS
         misc = Producto(
             id="prod-007",
             nombre="Producto Varios",
             descripcion="Producto misceláneo",
-            precio=Decimal("10.00"),
-            categoria=Categoria.OTROS,
-            stock=100,
+            categoria="otros",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=10.00,
+            cantidad_disponible=100,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-007",
+            tiempo_estimado_entrega="1 día",
+            id_proveedor="prov-003",
+            ubicacion="Almacén D - Estante 2",
         )
-        assert misc.categoria == Categoria.OTROS
+        assert misc.categoria == "otros"
 
-    def test_producto_decimal_precision(self):
-        """Test de precisión decimal en precios"""
-        from src.dominio.entities.producto import Categoria, Producto
-
+    def test_producto_float_precision(self):
+        """Test de precisión float en precios"""
         producto = Producto(
             id="prod-008",
             nombre="Producto Preciso",
             descripcion="Producto con precio preciso",
-            precio=Decimal("99.99"),
-            categoria=Categoria.OTROS,
-            stock=1,
+            categoria="otros",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=99.99,
+            cantidad_disponible=1,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-008",
+            tiempo_estimado_entrega="1 día",
+            id_proveedor="prov-001",
+            ubicacion="Almacén A - Estante 1",
         )
 
-        assert producto.precio == Decimal("99.99")
-        assert float(producto.precio) == 99.99
+        assert producto.valor_unitario == 99.99
+        assert isinstance(producto.valor_unitario, float)
 
-    def test_producto_inactive(self):
-        """Test de producto inactivo"""
-        from src.dominio.entities.producto import Categoria, Producto
-
+    def test_producto_zero_stock(self):
+        """Test de producto con stock cero"""
         producto = Producto(
             id="prod-009",
-            nombre="Producto Descontinuado",
-            descripcion="Producto que ya no se vende",
-            precio=Decimal("50.00"),
-            categoria=Categoria.OTROS,
-            stock=0,
-            activo=False,
+            nombre="Producto Agotado",
+            descripcion="Producto sin stock",
+            categoria="hogar",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=50.00,
+            cantidad_disponible=0,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-009",
+            tiempo_estimado_entrega="1 día",
+            id_proveedor="prov-001",
+            ubicacion="Almacén A - Estante 4",
         )
 
-        assert producto.activo is False
-        assert producto.stock == 0
+        assert producto.cantidad_disponible == 0
 
+    def test_producto_with_different_providers(self):
+        """Test de productos con diferentes proveedores"""
+        producto1 = Producto(
+            id="prod-010",
+            nombre="Producto 1",
+            descripcion="Descripción",
+            categoria="otros",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=100.00,
+            cantidad_disponible=10,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-010",
+            tiempo_estimado_entrega="1 día",
+            id_proveedor="prov-001",
+            ubicacion="Almacén A - Estante 1",
+        )
+        
+        producto2 = Producto(
+            id="prod-011",
+            nombre="Producto 2",
+            descripcion="Descripción",
+            categoria="otros",
+            condiciones_almacenamiento="Temperatura ambiente",
+            valor_unitario=200.00,
+            cantidad_disponible=20,
+            fecha_vencimiento=datetime(2025, 12, 31),
+            lote="LOT-011",
+            tiempo_estimado_entrega="2 días",
+            id_proveedor="prov-002",
+            ubicacion="Almacén B - Estante 2",
+        )
 
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+        assert producto1.id_proveedor == "prov-001"
+        assert producto2.id_proveedor == "prov-002"

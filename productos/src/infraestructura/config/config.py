@@ -4,6 +4,8 @@ from datetime import datetime
 
 from dotenv import load_dotenv
 from flask import Flask, g, request
+from flask_cors import CORS
+from src.infraestructura.config.db import db_productos, init_db_productos
 from src.aplicacion.servicios.producto_service import ProductoService
 from src.aplicacion.use_cases.producto_use_case import ProductoUseCase
 from src.infraestructura.cmd.producto_cmd import ProductoCmd
@@ -25,6 +27,10 @@ class Config:
     def __init__(self):
         self.app = None
 
+    def _import_models(self):
+        """Importa los modelos de base de datos para que SQLAlchemy los registre."""
+        from src.infraestructura.dto.producto import ProductoModel  # noqa: F401
+
     def create_app(self) -> Flask:
         """
         Crea y configura la aplicación Flask con todas las dependencias.
@@ -40,6 +46,12 @@ class Config:
         # Configurar logging de requests
         self._configure_request_logging()
 
+        # Configurar CORS
+        self._configure_cors()
+
+        # Configurar base de datos
+        self._configure_db()
+
         # Inyección de dependencias
         self._setup_dependencies()
 
@@ -53,12 +65,33 @@ class Config:
         self.app.config["ENV"] = os.getenv("ENV", "development")
         self.app.config["DEBUG"] = os.getenv("DEBUG", "False").lower() == "true"
         self.app.config["HOST"] = os.getenv("HOST", "0.0.0.0")
-        self.app.config["PORT"] = int(os.getenv("PORT", 5001))
+        self.app.config["PORT"] = int(os.getenv("PORT", 5002))
         self.app.config["LOG_LEVEL"] = os.getenv("LOG_LEVEL", "INFO")
 
         # Configuración JWT para autorización
         self.app.config["JWT_SECRET"] = os.getenv("JWT_SECRET", "your-secret-key-here-with-32-plus-chars-for-security")
         self.app.config["ALGORITHM"] = os.getenv("ALGORITHM", "HS256")
+
+        # Configuración de base de datos
+        self.app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///productos.db")
+        self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    def _configure_cors(self):
+        """Configura CORS para permitir peticiones desde el frontend."""
+        CORS(
+            self.app,
+            origins=["http://localhost:4200", "http://127.0.0.1:4200"],
+            methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            allow_headers=["Content-Type", "Authorization"],
+            supports_credentials=True,
+        )
+
+    def _configure_db(self):
+        """Configura la base de datos."""
+        init_db_productos(self.app)
+        self._import_models()
+        with self.app.app_context():
+            db_productos.create_all()
 
     def _configure_request_logging(self):
         """Configura el middleware para logging de requests y responses."""

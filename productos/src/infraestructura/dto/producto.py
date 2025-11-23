@@ -19,6 +19,7 @@ class ProductoModel(db_productos.Model):
     lote = db_productos.Column(db_productos.String, nullable=False)
     tiempo_estimado_entrega = db_productos.Column(db_productos.String, nullable=False)
     id_proveedor = db_productos.Column(db_productos.String, nullable=False)
+    ubicacion = db_productos.Column(db_productos.String, nullable=False)
 
     def __repr__(self):
         return f"<ProductoModel {self.id}: {self.nombre}>"

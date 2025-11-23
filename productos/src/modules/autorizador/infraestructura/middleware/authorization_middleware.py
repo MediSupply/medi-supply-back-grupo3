@@ -44,13 +44,20 @@ class AuthorizationMiddleware:
         import logging
 
         logger = logging.getLogger(__name__)
-        logger.debug(f"Validating access for {method} {route}")
+        logger.info(f"Validating access for {method} {route}")
+        
+        # Log si hay o no token (sin exponer el token)
+        if authorization_header:
+            token_preview = authorization_header[:20] + "..." if len(authorization_header) > 20 else authorization_header
+            logger.debug(f"Authorization header present: {token_preview}")
+        else:
+            logger.warning(f"No Authorization header found for {method} {route}")
 
         # Autorizar request usando el servicio simplificado (incluye validación de firma)
         authorized = self.auth_service.authorize_access(authorization_header, route, method, request)
 
         if not authorized:
-            logger.warning(f"Unauthorized access attempt to {method} {route}")
+            logger.warning(f"Unauthorized access attempt to {method} {route} - Authorization header present: {authorization_header is not None}")
             return (
                 jsonify(
                     {
