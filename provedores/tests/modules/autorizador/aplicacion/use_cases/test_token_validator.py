@@ -3,10 +3,10 @@ Tests unitarios para TokenValidator
 """
 
 from datetime import datetime, timedelta
-from unittest.mock import patch, MagicMock
-import pytest
-import jwt
+from unittest.mock import MagicMock, patch
 
+import jwt
+import pytest
 from src.modules.autorizador.aplicacion.use_cases.token_validator import TokenValidator
 from src.modules.autorizador.dominio.exceptions import ExpiredTokenError, InvalidTokenError
 
@@ -196,4 +196,3 @@ class TestTokenValidator:
         }
         with pytest.raises(InvalidTokenError):
             validator._validate_payload_structure(payload)
-

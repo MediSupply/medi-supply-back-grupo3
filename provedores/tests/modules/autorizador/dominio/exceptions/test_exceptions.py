@@ -3,7 +3,6 @@ Tests unitarios para las excepciones del módulo de autorización
 """
 
 import pytest
-
 from src.modules.autorizador.dominio.exceptions import (
     AuthorizationError,
     ExpiredTokenError,
@@ -128,4 +127,3 @@ class TestExceptionHierarchy:
         assert issubclass(ExpiredTokenError, Exception)
         assert issubclass(InsufficientPermissionsError, Exception)
         assert issubclass(MissingTokenError, Exception)
-

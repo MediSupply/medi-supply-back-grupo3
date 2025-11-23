@@ -3,6 +3,7 @@ Tests unitarios para ProvedorRepositoryImpl
 """
 
 from unittest.mock import MagicMock, patch
+
 import pytest
 
 # Importar después de configurar el path para evitar importaciones circulares
@@ -35,6 +36,7 @@ class TestProvedorRepositoryImpl:
     def test_model_to_entity(self, sample_provedor_model):
         """Test de conversión de modelo a entidad"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         repository = ProvedorRepositoryImpl()
         entity = repository._model_to_entity(sample_provedor_model)
 
@@ -47,6 +49,7 @@ class TestProvedorRepositoryImpl:
     def test_entity_to_model(self, sample_provedor):
         """Test de conversión de entidad a modelo"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         repository = ProvedorRepositoryImpl()
         model = repository._entity_to_model(sample_provedor)
 
@@ -59,6 +62,7 @@ class TestProvedorRepositoryImpl:
     def test_entity_to_model_sin_id(self, sample_provedor):
         """Test de conversión de entidad a modelo sin ID (para crear)"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         repository = ProvedorRepositoryImpl()
         # Crear un proveedor sin ID
         provedor_sin_id = Provedor(
@@ -71,14 +75,15 @@ class TestProvedorRepositoryImpl:
             email="nuevo@test.com",
         )
         model = repository._entity_to_model(provedor_sin_id, include_id=False)
-        
-        # Verificar que no tiene ID
-        assert not hasattr(model, 'id') or model.id is None
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+        # Verificar que no tiene ID
+        assert not hasattr(model, "id") or model.id is None
+
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_todos_exitoso(self, mock_db, sample_provedor_model):
         """Test de obtener todos los proveedores exitosamente"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_query.all.return_value = [sample_provedor_model]
@@ -93,10 +98,11 @@ class TestProvedorRepositoryImpl:
         assert result[0].id == 1
         mock_db.session.query.assert_called_once()
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_todos_vacio(self, mock_db):
         """Test de obtener todos los proveedores cuando no hay proveedores"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_query.all.return_value = []
@@ -109,10 +115,11 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert len(result) == 0
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_todos_error(self, mock_db):
         """Test de obtener todos los proveedores con error"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_db.session.query.side_effect = Exception("Error de base de datos")
         repository = ProvedorRepositoryImpl()
@@ -123,10 +130,11 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert len(result) == 0
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_por_id_exitoso(self, mock_db, sample_provedor_model):
         """Test de obtener proveedor por ID exitosamente"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_query.filter_by.return_value.first.return_value = sample_provedor_model
@@ -140,10 +148,11 @@ class TestProvedorRepositoryImpl:
         assert result is not None
         assert result.id == 1
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_por_id_no_encontrado(self, mock_db):
         """Test de obtener proveedor por ID cuando no existe"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_query.filter_by.return_value.first.return_value = None
@@ -156,10 +165,11 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert result is None
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_por_id_error(self, mock_db):
         """Test de obtener proveedor por ID con error"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_db.session.query.side_effect = Exception("Error de base de datos")
         repository = ProvedorRepositoryImpl()
@@ -170,10 +180,11 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert result is None
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_por_nit_exitoso(self, mock_db, sample_provedor_model):
         """Test de obtener proveedor por NIT exitosamente"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_query.filter_by.return_value.first.return_value = sample_provedor_model
@@ -187,10 +198,11 @@ class TestProvedorRepositoryImpl:
         assert result is not None
         assert result.nit == 900123456
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_por_nit_no_encontrado(self, mock_db):
         """Test de obtener proveedor por NIT cuando no existe"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_query.filter_by.return_value.first.return_value = None
@@ -203,10 +215,11 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert result is None
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_por_pais_exitoso(self, mock_db, sample_provedor_model):
         """Test de obtener proveedores por país exitosamente"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_filter = MagicMock()
@@ -222,10 +235,11 @@ class TestProvedorRepositoryImpl:
         assert len(result) == 1
         assert result[0].pais == Pais.COLOMBIA
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_obtener_por_pais_error(self, mock_db):
         """Test de obtener proveedores por país con error"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_db.session.query.side_effect = Exception("Error de base de datos")
         repository = ProvedorRepositoryImpl()
@@ -236,10 +250,11 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert len(result) == 0
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_buscar_por_nombre_exitoso(self, mock_db, sample_provedor_model):
         """Test de buscar proveedores por nombre exitosamente"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_filter = MagicMock()
@@ -255,10 +270,11 @@ class TestProvedorRepositoryImpl:
         assert len(result) == 1
         assert "Tecnología" in result[0].nombre
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_buscar_por_nombre_error(self, mock_db):
         """Test de buscar proveedores por nombre con error"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_db.session.query.side_effect = Exception("Error de base de datos")
         repository = ProvedorRepositoryImpl()
@@ -269,10 +285,11 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert len(result) == 0
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_crear_exitoso(self, mock_db, sample_provedor):
         """Test de crear proveedor exitosamente"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_model = MagicMock()
         mock_model.id = 1
@@ -282,11 +299,11 @@ class TestProvedorRepositoryImpl:
         mock_model.direccion = sample_provedor.direccion
         mock_model.telefono = sample_provedor.telefono
         mock_model.email = sample_provedor.email
-        
+
         mock_db.session.add = MagicMock()
         mock_db.session.commit = MagicMock()
         mock_db.session.refresh = MagicMock()
-        
+
         repository = ProvedorRepositoryImpl()
         # Mock del método _entity_to_model para devolver el mock_model
         repository._entity_to_model = MagicMock(return_value=mock_model)
@@ -300,10 +317,11 @@ class TestProvedorRepositoryImpl:
         mock_db.session.add.assert_called_once()
         mock_db.session.commit.assert_called_once()
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_crear_error(self, mock_db, sample_provedor):
         """Test de crear proveedor con error"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_db.session.add.side_effect = Exception("Error de base de datos")
         repository = ProvedorRepositoryImpl()
@@ -314,10 +332,11 @@ class TestProvedorRepositoryImpl:
             repository.crear(sample_provedor)
         mock_db.session.rollback.assert_called_once()
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_actualizar_exitoso(self, mock_db, sample_provedor):
         """Test de actualizar proveedor exitosamente"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_model = MagicMock()
         mock_model.id = sample_provedor.id
@@ -327,13 +346,13 @@ class TestProvedorRepositoryImpl:
         mock_model.direccion = sample_provedor.direccion
         mock_model.telefono = sample_provedor.telefono
         mock_model.email = sample_provedor.email
-        
+
         mock_query = MagicMock()
         mock_query.filter_by.return_value.first.return_value = mock_model
         mock_db.session.query.return_value = mock_query
         mock_db.session.commit = MagicMock()
         mock_db.session.refresh = MagicMock()
-        
+
         repository = ProvedorRepositoryImpl()
         repository._model_to_entity = MagicMock(return_value=sample_provedor)
 
@@ -344,10 +363,11 @@ class TestProvedorRepositoryImpl:
         assert result is not None
         mock_db.session.commit.assert_called_once()
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_actualizar_no_encontrado(self, mock_db, sample_provedor):
         """Test de actualizar proveedor cuando no existe"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_query.filter_by.return_value.first.return_value = None
@@ -358,10 +378,11 @@ class TestProvedorRepositoryImpl:
         with pytest.raises(ValueError):
             repository.actualizar(sample_provedor)
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_eliminar_exitoso(self, mock_db):
         """Test de eliminar proveedor exitosamente"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_model = MagicMock()
         mock_query = MagicMock()
@@ -379,10 +400,11 @@ class TestProvedorRepositoryImpl:
         mock_db.session.delete.assert_called_once_with(mock_model)
         mock_db.session.commit.assert_called_once()
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_eliminar_no_encontrado(self, mock_db):
         """Test de eliminar proveedor cuando no existe"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_query.filter_by.return_value.first.return_value = None
@@ -395,10 +417,11 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert result is False
 
-    @patch('src.infraestructura.repositorios.provedor_repository.db_provedores')
+    @patch("src.infraestructura.repositorios.provedor_repository.db_provedores")
     def test_eliminar_error(self, mock_db):
         """Test de eliminar proveedor con error"""
         from src.infraestructura.repositorios.provedor_repository import ProvedorRepositoryImpl
+
         # Arrange
         mock_query = MagicMock()
         mock_model = MagicMock()
@@ -413,4 +436,3 @@ class TestProvedorRepositoryImpl:
         # Assert
         assert result is False
         mock_db.session.rollback.assert_called_once()
-

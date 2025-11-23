@@ -3,11 +3,11 @@ Tests unitarios para las rutas de proveedores
 """
 
 from unittest.mock import MagicMock, patch
+
 import pytest
 from flask import Flask
-
-from src.infraestructura.rutas.provedor_routes import create_provedor_routes
 from src.infraestructura.cmd.provedor_cmd import ProvedorCmd
+from src.infraestructura.rutas.provedor_routes import create_provedor_routes
 
 
 class TestProvedorRoutes:
@@ -95,4 +95,3 @@ class TestProvedorRoutes:
             response = client.get("/provedores/buscar")
             assert response.status_code == 400
             mock_controller.buscar_provedores_por_nombre.assert_not_called()
-
