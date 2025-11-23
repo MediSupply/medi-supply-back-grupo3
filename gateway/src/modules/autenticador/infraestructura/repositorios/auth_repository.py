@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, timedelta
+from typing import Optional
 
 import jwt
 from config.db import db
@@ -7,6 +8,7 @@ from modules.autenticador.aplicacion.dtos.login_result_dto import LoginResultDto
 from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 from modules.autenticador.aplicacion.mappers.session_mapper import SessionMapper
 from modules.autenticador.dominio.entities.session import Session
+from modules.autenticador.dominio.entities.user import User
 from modules.autenticador.dominio.repositorios.auth_repository import AuthRepository
 from modules.autenticador.infraestructura.dto.user import Role
 from modules.autenticador.infraestructura.dto.user import User as UserModel
@@ -128,3 +130,17 @@ class AuthRepositoryImpl(AuthRepository):
         except Exception as e:
             print(f"Error checking if user exists: {e}")
             return False
+
+    def get_user_by_id(self, user_id: str) -> Optional[User]:
+        """Get user by ID from the database"""
+        from modules.autenticador.aplicacion.mappers.user_mapper import UserMapper
+
+        try:
+            user_model = db.session.query(UserModel).filter_by(id=user_id).first()
+            if not user_model:
+                return None
+            # Convert infrastructure model to domain entity
+            return UserMapper.infrastructure_to_domain(user_model)
+        except Exception as e:
+            print(f"Error getting user by id: {e}")
+            return None

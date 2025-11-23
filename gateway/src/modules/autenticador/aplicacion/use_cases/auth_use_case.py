@@ -1,6 +1,9 @@
+from typing import Optional
+
 from modules.autenticador.aplicacion.dtos.login_result_dto import LoginResultDto
 from modules.autenticador.aplicacion.dtos.session_dto import SessionDto
 from modules.autenticador.aplicacion.servicios.auth_service import AuthService
+from modules.autenticador.dominio.entities.user import User
 
 
 class AuthUseCase:
@@ -21,3 +24,7 @@ class AuthUseCase:
     def user_exists(self, email: str) -> bool:
         """Check if a user with the given email already exists"""
         return self.auth_service.user_exists(email)
+
+    def get_current_user(self, token: str) -> Optional[User]:
+        """Get current authenticated user from token"""
+        return self.auth_service.get_current_user(token)

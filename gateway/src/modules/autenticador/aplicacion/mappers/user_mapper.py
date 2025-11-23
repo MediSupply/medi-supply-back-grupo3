@@ -28,6 +28,16 @@ class UserMapper:
         }
 
     @staticmethod
+    def entity_to_json_safe(user: User) -> Dict[str, Any]:
+        """Convert domain User entity to JSON without password"""
+        return {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role.value.lower(),  # Convert to lowercase for consistency
+        }
+
+    @staticmethod
     def dto_to_entity(user_dto: UserDto) -> User:
         # Convertir de DTO (minúsculas) a Domain (mayúsculas)
         role_value = user_dto.role.value.upper()  # "user" -> "USER", "admin" -> "ADMIN"

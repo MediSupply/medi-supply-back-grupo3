@@ -10,6 +10,7 @@ from modules.autenticador.aplicacion.use_cases.auth_use_case import AuthUseCase
 from modules.autenticador.infraestructura.cmd.auth_cmd import AuthCmd
 from modules.autenticador.infraestructura.repositorios.auth_repository import AuthRepositoryImpl
 from modules.autenticador.infraestructura.rutas.auth_routes import create_auth_routes
+from modules.clientes.infraestructura.rutas.cliente_routes import create_cliente_routes
 from modules.health.aplicacion.servicios import HealthService
 from modules.health.aplicacion.use_cases.health_use_case import HealthUseCase
 from modules.health.infraestructura.cmd import HealthCmd
@@ -78,6 +79,7 @@ class Config:
         self.app.config["ALGORITHM"] = os.getenv("ALGORITHM", "HS256")
         self.app.config["PRODUCTOS_SERVICE_URL"] = os.getenv("PRODUCTOS_SERVICE_URL", "http://127.0.0.1:5001")
         self.app.config["PROVEDORES_SERVICE_URL"] = os.getenv("PROVEDORES_SERVICE_URL", "http://127.0.0.1:5003")
+        self.app.config["CLIENTES_SERVICE_URL"] = os.getenv("CLIENTES_SERVICE_URL", "http://clientes:5004")
         self.app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///app.db")
         self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -175,6 +177,9 @@ class Config:
 
         provedores_routes = create_provedores_routes()
         self.app.register_blueprint(provedores_routes)
+
+        clientes_routes = create_cliente_routes()
+        self.app.register_blueprint(clientes_routes)
 
         # Ruta raíz simple
         @self.app.route("/")
