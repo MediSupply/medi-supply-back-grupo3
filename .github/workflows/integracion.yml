@@ -83,6 +83,46 @@ jobs:
             tests/ \
             -v
 
+      - name: Ejecutar tests de productos con pytest y coverage
+        working-directory: productos
+        env:
+          PIPENV_PYTHON: python
+          JWT_SECRET: "test-secret-key-with-at-least-32-characters-for-security-in-ci"
+          ALGORITHM: "HS256"
+        run: |
+          pipenv install --dev --python python
+          pipenv run pytest \
+            --cov=src/aplicacion \
+            --cov=src/dominio \
+            --cov=src/infraestructura \
+            --cov-report=term-missing \
+            --cov-report=html:../htmlcov-productos \
+            --cov-report=json:../coverage-productos.json \
+            --cov-report=xml:../coverage-productos.xml \
+            --junitxml=../junit-productos.xml \
+            tests/ \
+            -v
+
+      - name: Ejecutar tests de proveedores con pytest y coverage
+        working-directory: provedores
+        env:
+          PIPENV_PYTHON: python
+          JWT_SECRET: "test-secret-key-with-at-least-32-characters-for-security-in-ci"
+          ALGORITHM: "HS256"
+        run: |
+          pipenv install --dev --python python
+          pipenv run pytest \
+            --cov=src/aplicacion \
+            --cov=src/dominio \
+            --cov=src/infraestructura \
+            --cov-report=term-missing \
+            --cov-report=html:../htmlcov-proveedores \
+            --cov-report=json:../coverage-proveedores.json \
+            --cov-report=xml:../coverage-proveedores.xml \
+            --junitxml=../junit-proveedores.xml \
+            tests/ \
+            -v
+
       - name: Verificar coverage del gateway mínimo del 80%
         run: |
           python3 << 'EOF'
@@ -154,5 +194,79 @@ jobs:
                   sys.exit(1)
           else:
               print(f"❌ ERROR: No se encontró el archivo de coverage de clientes: {COVERAGE_FILE}")
+              sys.exit(1)
+          EOF
+
+      - name: Verificar coverage de productos mínimo del 80%
+        run: |
+          python3 << 'EOF'
+          import json
+          import sys
+          import os
+          
+          COVERAGE_FILE = "coverage-productos.json"
+          MIN_COVERAGE = 80
+          
+          if os.path.exists(COVERAGE_FILE):
+              try:
+                  with open(COVERAGE_FILE, 'r') as f:
+                      data = json.load(f)
+                  
+                  total_coverage = data['totals']['percent_covered']
+                  
+                  print(f"📊 Coverage Global de Productos: {total_coverage:.1f}%")
+                  print(f"🎯 Coverage Mínimo Requerido: {MIN_COVERAGE}%")
+                  
+                  if total_coverage >= MIN_COVERAGE:
+                      print(f"✅ Coverage de Productos cumple con el mínimo requerido ({MIN_COVERAGE}%)")
+                      sys.exit(0)
+                  else:
+                      print(f"❌ Coverage de Productos NO cumple con el mínimo requerido")
+                      print(f"   Actual: {total_coverage:.1f}%")
+                      print(f"   Mínimo: {MIN_COVERAGE}%")
+                      print(f"   Diferencia: {MIN_COVERAGE - total_coverage:.1f}%")
+                      sys.exit(1)
+              except Exception as e:
+                  print(f"❌ ERROR al procesar coverage de productos: {e}")
+                  sys.exit(1)
+          else:
+              print(f"❌ ERROR: No se encontró el archivo de coverage de productos: {COVERAGE_FILE}")
+              sys.exit(1)
+          EOF
+
+      - name: Verificar coverage de proveedores mínimo del 80%
+        run: |
+          python3 << 'EOF'
+          import json
+          import sys
+          import os
+          
+          COVERAGE_FILE = "coverage-proveedores.json"
+          MIN_COVERAGE = 80
+          
+          if os.path.exists(COVERAGE_FILE):
+              try:
+                  with open(COVERAGE_FILE, 'r') as f:
+                      data = json.load(f)
+                  
+                  total_coverage = data['totals']['percent_covered']
+                  
+                  print(f"📊 Coverage Global de Proveedores: {total_coverage:.1f}%")
+                  print(f"🎯 Coverage Mínimo Requerido: {MIN_COVERAGE}%")
+                  
+                  if total_coverage >= MIN_COVERAGE:
+                      print(f"✅ Coverage de Proveedores cumple con el mínimo requerido ({MIN_COVERAGE}%)")
+                      sys.exit(0)
+                  else:
+                      print(f"❌ Coverage de Proveedores NO cumple con el mínimo requerido")
+                      print(f"   Actual: {total_coverage:.1f}%")
+                      print(f"   Mínimo: {MIN_COVERAGE}%")
+                      print(f"   Diferencia: {MIN_COVERAGE - total_coverage:.1f}%")
+                      sys.exit(1)
+              except Exception as e:
+                  print(f"❌ ERROR al procesar coverage de proveedores: {e}")
+                  sys.exit(1)
+          else:
+              print(f"❌ ERROR: No se encontró el archivo de coverage de proveedores: {COVERAGE_FILE}")
               sys.exit(1)
           EOF
