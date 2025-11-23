@@ -1,6 +1,7 @@
 """
 Configuración compartida para todos los tests
 """
+
 import os
 import sys
 from datetime import datetime
@@ -14,25 +15,24 @@ if src_dir not in sys.path:
 
 import pytest
 from flask import Flask
-
-from src.dominio.entities.producto import Producto
 from src.aplicacion.dtos.producto_dto import ProductoDto
+from src.dominio.entities.producto import Producto
 
 
 @pytest.fixture(scope="session")
 def app():
     """Crea una aplicación Flask para los tests que requieren contexto de aplicación"""
     test_app = Flask(__name__)
-    test_app.config['TESTING'] = True
-    test_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    test_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
+    test_app.config["TESTING"] = True
+    test_app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+    test_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
     # Inicializar la base de datos en el contexto de la app
     from src.infraestructura.config.db import db_productos, init_db_productos
-    
+
     # Importar modelos para que SQLAlchemy los registre
     from src.infraestructura.dto.producto import ProductoModel  # noqa: F401
-    
+
     with test_app.app_context():
         init_db_productos(test_app)
         db_productos.create_all()
@@ -87,4 +87,3 @@ def mock_producto_repository():
     """Crea un mock del repositorio de productos"""
     mock_repo = MagicMock()
     return mock_repo
-

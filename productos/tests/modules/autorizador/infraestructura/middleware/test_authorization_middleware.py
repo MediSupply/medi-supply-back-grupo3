@@ -4,15 +4,15 @@ Tests unitarios para AuthorizationMiddleware
 
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
+
+import jwt
 import pytest
 from flask import Flask
-import jwt
-
+from src.modules.autorizador.aplicacion.servicios.auth_service import AuthService
 from src.modules.autorizador.infraestructura.middleware.authorization_middleware import (
     AuthorizationMiddleware,
     create_authorization_middleware,
 )
-from src.modules.autorizador.aplicacion.servicios.auth_service import AuthService
 
 
 class TestAuthorizationMiddleware:
@@ -69,21 +69,13 @@ class TestAuthorizationMiddleware:
         token = jwt.encode(payload, secret_key, algorithm="HS256")
         header = f"Bearer {token}"
 
-        with app.test_request_context(
-            method="GET",
-            path="/productos",
-            headers={"Authorization": header}
-        ):
+        with app.test_request_context(method="GET", path="/productos", headers={"Authorization": header}):
             result = middleware.before_request()
             assert result is None
 
     def test_before_request_unauthorized(self, middleware, app):
         """Test de before_request sin autorización"""
-        with app.test_request_context(
-            method="GET",
-            path="/productos",
-            headers={}
-        ):
+        with app.test_request_context(method="GET", path="/productos", headers={}):
             result = middleware.before_request()
             assert result is not None
             response, status_code = result
@@ -92,11 +84,7 @@ class TestAuthorizationMiddleware:
 
     def test_before_request_invalid_token(self, middleware, app):
         """Test de before_request con token inválido"""
-        with app.test_request_context(
-            method="GET",
-            path="/productos",
-            headers={"Authorization": "Bearer invalid.token"}
-        ):
+        with app.test_request_context(method="GET", path="/productos", headers={"Authorization": "Bearer invalid.token"}):
             result = middleware.before_request()
             assert result is not None
             response, status_code = result
@@ -126,7 +114,6 @@ class TestAuthorizationMiddleware:
     def test_create_authorization_middleware_registers_before_request(self, app, secret_key):
         """Test de que el middleware se registra en Flask"""
         create_authorization_middleware(app, secret_key, "HS256")
-        
+
         # Verificar que se registró el before_request
         assert len(app.before_request_funcs.get(None, [])) > 0
-

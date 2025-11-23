@@ -22,4 +22,3 @@ class ProductoModel(db_productos.Model):
 
     def __repr__(self):
         return f"<ProductoModel {self.id}: {self.nombre}>"
-

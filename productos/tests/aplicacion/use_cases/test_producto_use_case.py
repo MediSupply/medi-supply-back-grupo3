@@ -4,8 +4,8 @@ Tests unitarios para ProductoUseCase
 
 from datetime import datetime
 from unittest.mock import MagicMock
-import pytest
 
+import pytest
 from src.aplicacion.use_cases.producto_use_case import ProductoUseCase
 from src.dominio.entities.producto import Producto
 
@@ -144,4 +144,3 @@ class TestProductoUseCase:
         assert len(result) == 1
         assert "Laptop" in result[0].nombre
         mock_service.buscar_productos_por_nombre.assert_called_once_with("Laptop")
-

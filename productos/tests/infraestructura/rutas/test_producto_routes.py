@@ -3,9 +3,9 @@ Tests unitarios para las rutas de productos
 """
 
 from unittest.mock import MagicMock
+
 import pytest
 from flask import Flask
-
 from src.infraestructura.rutas.producto_routes import create_producto_routes
 
 
@@ -132,4 +132,3 @@ class TestProductoRoutes:
 
         assert response.status_code == 200
         mock_controller.obtener_productos_por_categoria.assert_called_once_with("deportes")
-
