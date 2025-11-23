@@ -2,6 +2,8 @@ from typing import List, Optional
 
 from src.dominio.entities.provedor import Pais, Provedor
 from src.dominio.repositorios.provedor_repository import ProvedorRepository
+from src.infraestructura.config.db import db_provedores
+from src.infraestructura.dto.provedor import ProvedorModel
 
 
 class ProvedorRepositoryImpl(ProvedorRepository):
@@ -65,6 +67,32 @@ class ProvedorRepositoryImpl(ProvedorRepository):
                 email="norte@distribuidora.mx",
             ),
         ]
+
+    def _model_to_entity(self, model: ProvedorModel) -> Provedor:
+        """Convierte un modelo de base de datos a una entidad del dominio."""
+        return Provedor(
+            id=model.id,
+            nit=model.nit,
+            nombre=model.nombre,
+            pais=Pais(model.pais.lower()),
+            direccion=model.direccion,
+            telefono=model.telefono,
+            email=model.email,
+        )
+
+    def _entity_to_model(self, entity: Provedor, include_id: bool = True) -> ProvedorModel:
+        """Convierte una entidad del dominio a un modelo de base de datos."""
+        model = ProvedorModel(
+            nit=entity.nit,
+            nombre=entity.nombre,
+            pais=entity.pais.value,
+            direccion=entity.direccion,
+            telefono=entity.telefono,
+            email=entity.email,
+        )
+        if include_id and entity.id:
+            model.id = entity.id
+        return model
 
     def obtener_todos(self) -> List[Provedor]:
         """Obtiene todos los proveedores."""

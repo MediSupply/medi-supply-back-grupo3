@@ -146,7 +146,13 @@ class TokenValidator:
         if not isinstance(payload["exp"], (int, float)):
             raise InvalidTokenError("exp debe ser timestamp numérico")
 
-        # Validar que el role sea válido
+        # Validar que el role sea válido (aceptar tanto mayúsculas como minúsculas)
+        role_value = payload["role"]
+        if isinstance(role_value, str):
+            role_value = role_value.lower()
         valid_roles = ["admin", "manager", "user", "viewer"]
-        if payload["role"] not in valid_roles:
+        if role_value not in valid_roles:
             raise InvalidTokenError(f"Rol '{payload['role']}' no es válido")
+        
+        # Normalizar el rol en el payload para que from_dict funcione correctamente
+        payload["role"] = role_value
