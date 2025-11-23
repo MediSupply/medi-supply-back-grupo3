@@ -37,4 +37,9 @@ def create_auth_routes(auth_controller: AuthCmd) -> Blueprint:
         """Endpoint para cerrar sesión."""
         return auth_controller.signOut()
 
+    @auth_bp.route("/me", methods=["GET"])
+    def get_me():
+        """Endpoint para obtener información del usuario autenticado."""
+        return auth_controller.get_me()
+
     return auth_bp

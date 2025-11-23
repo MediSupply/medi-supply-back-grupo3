@@ -13,6 +13,7 @@ services:
       - ALGORITHM=HS256
       - PRODUCTOS_SERVICE_URL=http://productos:5002
       - PROVEDORES_SERVICE_URL=http://provedores:5003
+      - CLIENTES_SERVICE_URL=http://clientes:5004
     networks:
       - app_net
       - internal_net
@@ -41,6 +42,21 @@ services:
       - DEBUG=true
       - HOST=0.0.0.0
       - PORT=5003
+      - LOG_LEVEL=INFO
+      - JWT_SECRET=your-secret-key-here-with-32-plus-chars-for-security
+      - ALGORITHM=HS256
+    networks:
+      - internal_net
+
+  clientes:
+    build: clientes
+    ports:
+      - "5004:5004"
+    environment:
+      - ENV=development
+      - DEBUG=true
+      - HOST=0.0.0.0
+      - PORT=5004
       - LOG_LEVEL=INFO
       - JWT_SECRET=your-secret-key-here-with-32-plus-chars-for-security
       - ALGORITHM=HS256

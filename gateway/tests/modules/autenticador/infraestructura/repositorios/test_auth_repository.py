@@ -288,6 +288,86 @@ class TestAuthRepositoryImpl:
         assert result is None
         mock_session.rollback.assert_called_once()
 
+    @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
+    @patch("modules.autenticador.aplicacion.mappers.user_mapper.UserMapper")
+    def test_auth_repository_get_user_by_id_success(self, mock_mapper_class, mock_db):
+        """Test del método get_user_by_id exitoso"""
+        from modules.autenticador.dominio.entities.user import Role, User
+        from modules.autenticador.infraestructura.dto.user import Role as InfraRole
+        from modules.autenticador.infraestructura.repositorios.auth_repository import AuthRepositoryImpl
+
+        # Mock del usuario en la base de datos
+        mock_user = MagicMock()
+        mock_user.id = "user-id-123"
+        mock_user.name = "Test User"
+        mock_user.email = "test@example.com"
+        mock_user.password = "password123"
+        mock_user.role = InfraRole.USER
+
+        # Mock de la sesión de base de datos
+        mock_session = MagicMock()
+        mock_session.query.return_value.filter_by.return_value.first.return_value = mock_user
+
+        mock_db.session = mock_session
+
+        # Mock del mapper que retorna un User del dominio
+        expected_user = User(
+            id="user-id-123",
+            name="Test User",
+            email="test@example.com",
+            password="password123",
+            role=Role.USER,
+        )
+        mock_mapper_class.infrastructure_to_domain.return_value = expected_user
+
+        repo = AuthRepositoryImpl("secret_key", "HS256")
+
+        # Test get_user_by_id exitoso
+        result = repo.get_user_by_id("user-id-123")
+
+        assert result is not None
+        assert result.id == "user-id-123"
+        assert result.name == "Test User"
+        assert result.email == "test@example.com"
+        assert result.role == Role.USER
+        mock_mapper_class.infrastructure_to_domain.assert_called_once_with(mock_user)
+
+    @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
+    def test_auth_repository_get_user_by_id_not_found(self, mock_db):
+        """Test del método get_user_by_id cuando el usuario no existe"""
+        from modules.autenticador.infraestructura.repositorios.auth_repository import AuthRepositoryImpl
+
+        # Mock de la sesión de base de datos que retorna None
+        mock_session = MagicMock()
+        mock_session.query.return_value.filter_by.return_value.first.return_value = None
+
+        mock_db.session = mock_session
+
+        repo = AuthRepositoryImpl("secret_key", "HS256")
+
+        # Test get_user_by_id con usuario inexistente
+        result = repo.get_user_by_id("nonexistent-id")
+
+        assert result is None
+
+    @patch("modules.autenticador.infraestructura.repositorios.auth_repository.db")
+    def test_auth_repository_get_user_by_id_exception(self, mock_db):
+        """Test del método get_user_by_id con excepción"""
+        from modules.autenticador.infraestructura.repositorios.auth_repository import AuthRepositoryImpl
+
+        # Mock de la sesión de base de datos que lanza excepción
+        mock_session = MagicMock()
+        mock_session.query.side_effect = Exception("Database error")
+
+        mock_db.session = mock_session
+
+        repo = AuthRepositoryImpl("secret_key", "HS256")
+
+        # Test get_user_by_id con excepción
+        result = repo.get_user_by_id("user-id-123")
+
+        assert result is None
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
