@@ -66,8 +66,10 @@ jobs:
 
       - name: Ejecutar tests de clientes con pytest y coverage
         working-directory: clientes
+        env:
+          PIPENV_PYTHON: python
         run: |
-          pipenv install --dev
+          pipenv install --dev --python python
           pipenv run pytest \
             --cov=src/aplicacion \
             --cov=src/dominio \
