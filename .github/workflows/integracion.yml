@@ -129,7 +129,6 @@ jobs:
           import json
           import sys
           import os
-          import os
           
           COVERAGE_FILE = "coverage.json"
           MIN_COVERAGE = 80

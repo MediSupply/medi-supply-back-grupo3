@@ -181,7 +181,7 @@ class TestAuthService:
         assert user_info is not None
         assert "role" in user_info
         assert "permissions" in user_info
-        assert user_info["role"] == "ADMIN"
+        assert user_info["role"] == "admin"
 
     def test_get_user_info_invalid(self, auth_service):
         """Test de obtención de información de usuario inválido"""

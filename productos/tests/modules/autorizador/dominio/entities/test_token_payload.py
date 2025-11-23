@@ -13,10 +13,10 @@ class TestRole:
 
     def test_role_values(self):
         """Test de los valores del enum Role"""
-        assert Role.ADMIN.value == "ADMIN"
-        assert Role.MANAGER.value == "MANAGER"
-        assert Role.USER.value == "USER"
-        assert Role.VIEWER.value == "VIEWER"
+        assert Role.ADMIN.value == "admin"
+        assert Role.MANAGER.value == "manager"
+        assert Role.USER.value == "user"
+        assert Role.VIEWER.value == "viewer"
 
 
 class TestTokenPayload:

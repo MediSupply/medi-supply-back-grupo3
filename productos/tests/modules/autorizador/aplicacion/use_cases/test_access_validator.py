@@ -150,7 +150,7 @@ class TestAccessValidator:
         """Test de obtención de permisos de usuario admin"""
         permissions = validator.get_user_permissions(admin_payload)
 
-        assert permissions["role"] == "ADMIN"
+        assert permissions["role"] == "admin"
         assert "permissions" in permissions
         assert "user_id" in permissions
         assert permissions["user_id"] == "user-001"
@@ -159,7 +159,7 @@ class TestAccessValidator:
         """Test de obtención de permisos de usuario user"""
         permissions = validator.get_user_permissions(user_payload)
 
-        assert permissions["role"] == "USER"
+        assert permissions["role"] == "user"
         assert "permissions" in permissions
         assert permissions["user_id"] == "user-002"
 
@@ -167,6 +167,6 @@ class TestAccessValidator:
         """Test de obtención de permisos de usuario viewer"""
         permissions = validator.get_user_permissions(viewer_payload)
 
-        assert permissions["role"] == "VIEWER"
+        assert permissions["role"] == "viewer"
         assert "permissions" in permissions
         assert permissions["user_id"] == "user-003"
