@@ -4,9 +4,9 @@ Tests unitarios para AuthService
 
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
-import pytest
-import jwt
 
+import jwt
+import pytest
 from src.modules.autorizador.aplicacion.servicios.auth_service import AuthService
 from src.modules.autorizador.dominio.entities.token_payload import Role, TokenPayload
 from src.modules.autorizador.dominio.exceptions import (
@@ -118,7 +118,7 @@ class TestAuthService:
         mock_request = MagicMock()
         mock_request.headers.get.side_effect = lambda key: {
             "X-Internal-Request": "true",
-            "X-Gateway-Token": "gateway-token"
+            "X-Gateway-Token": "gateway-token",
         }.get(key)
 
         result = auth_service.authorize_access(None, "/productos", "GET", mock_request)
@@ -195,4 +195,3 @@ class TestAuthService:
         """Test de obtención de información de usuario con header None"""
         user_info = auth_service.get_user_info(None)
         assert user_info is None
-

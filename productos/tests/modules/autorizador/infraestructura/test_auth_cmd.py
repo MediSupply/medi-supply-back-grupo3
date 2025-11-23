@@ -3,9 +3,9 @@ Tests unitarios para AuthCmd
 """
 
 from unittest.mock import MagicMock, patch
+
 import pytest
 from flask import Flask
-
 from src.modules.autorizador.infraestructura.cmd.auth_cmd import AuthCmd
 
 
@@ -92,9 +92,7 @@ class TestAuthCmd:
         cmd = AuthCmd(mock_auth_service)
 
         with app.test_request_context(
-            headers={"Authorization": "Bearer valid-token"},
-            json={"route": "/productos", "method": "GET"},
-            method="POST"
+            headers={"Authorization": "Bearer valid-token"}, json={"route": "/productos", "method": "GET"}, method="POST"
         ):
             response, status_code = cmd.authorize_access()
 
@@ -108,9 +106,7 @@ class TestAuthCmd:
         cmd = AuthCmd(mock_auth_service)
 
         with app.test_request_context(
-            headers={"Authorization": "Bearer token"},
-            json={"route": "/productos", "method": "GET"},
-            method="POST"
+            headers={"Authorization": "Bearer token"}, json={"route": "/productos", "method": "GET"}, method="POST"
         ):
             response, status_code = cmd.authorize_access()
 
@@ -125,7 +121,8 @@ class TestAuthCmd:
             # request.get_json() puede retornar None y causar un error 500
             # Necesitamos mockear request.get_json para que retorne None
             from flask import request
-            with patch.object(request, 'get_json', return_value=None):
+
+            with patch.object(request, "get_json", return_value=None):
                 response, status_code = cmd.authorize_access()
 
         assert status_code == 400
@@ -137,9 +134,7 @@ class TestAuthCmd:
         cmd = AuthCmd(mock_auth_service)
 
         with app.test_request_context(
-            headers={"Authorization": "Bearer token"},
-            json={"route": "/productos", "method": "GET"},
-            method="POST"
+            headers={"Authorization": "Bearer token"}, json={"route": "/productos", "method": "GET"}, method="POST"
         ):
             response, status_code = cmd.authorize_access()
 
@@ -190,4 +185,3 @@ class TestAuthCmd:
 
         assert status_code == 500
         assert "error" in response.get_json()
-

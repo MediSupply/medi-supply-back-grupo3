@@ -4,8 +4,8 @@ Tests unitarios para ProductoService
 
 from datetime import datetime
 from unittest.mock import MagicMock
-import pytest
 
+import pytest
 from src.aplicacion.servicios.producto_service import ProductoService
 from src.dominio.entities.producto import Producto
 
@@ -167,4 +167,3 @@ class TestProductoService:
         # Assert
         assert len(result) == 0
         mock_producto_repository.buscar_por_nombre.assert_called_once_with("Inexistente")
-

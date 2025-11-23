@@ -3,9 +3,9 @@ Tests unitarios para las rutas de autorización
 """
 
 from unittest.mock import MagicMock
+
 import pytest
 from flask import Flask
-
 from src.modules.autorizador.infraestructura.rutas.auth_routes import create_auth_routes
 
 
@@ -94,4 +94,3 @@ class TestAuthRoutes:
         mock_controller.validate_token.assert_not_called()
         mock_controller.authorize_access.assert_not_called()
         mock_controller.get_user_info.assert_not_called()
-

@@ -3,12 +3,12 @@ Tests unitarios para AccessValidator
 """
 
 from datetime import datetime, timedelta
-import pytest
 from unittest.mock import MagicMock
 
+import pytest
 from src.modules.autorizador.aplicacion.use_cases.access_validator import AccessValidator
+from src.modules.autorizador.dominio.entities.resource import ActionType, ResourceType
 from src.modules.autorizador.dominio.entities.token_payload import Role, TokenPayload
-from src.modules.autorizador.dominio.entities.resource import ResourceType, ActionType
 from src.modules.autorizador.dominio.exceptions import InsufficientPermissionsError
 
 
@@ -50,8 +50,8 @@ class TestAccessValidator:
     def test_access_validator_init(self, validator):
         """Test de inicialización de AccessValidator"""
         assert validator is not None
-        assert hasattr(validator, 'route_permissions')
-        assert hasattr(validator, 'public_routes')
+        assert hasattr(validator, "route_permissions")
+        assert hasattr(validator, "public_routes")
 
     def test_is_public_route_exact_match(self, validator):
         """Test de verificación de ruta pública (coincidencia exacta)"""
@@ -75,7 +75,7 @@ class TestAccessValidator:
         mock_request = MagicMock()
         mock_request.headers.get.side_effect = lambda key: {
             "X-Internal-Request": "true",
-            "X-Gateway-Token": "gateway-token"
+            "X-Gateway-Token": "gateway-token",
         }.get(key)
 
         assert validator._is_internal_request(mock_request) is True
@@ -90,9 +90,7 @@ class TestAccessValidator:
     def test_is_internal_request_partial_headers(self, validator):
         """Test de verificación de petición interna con headers parciales"""
         mock_request = MagicMock()
-        mock_request.headers.get.side_effect = lambda key: {
-            "X-Internal-Request": "true"
-        }.get(key)
+        mock_request.headers.get.side_effect = lambda key: {"X-Internal-Request": "true"}.get(key)
 
         assert validator._is_internal_request(mock_request) is False
 
@@ -172,4 +170,3 @@ class TestAccessValidator:
         assert permissions["role"] == "VIEWER"
         assert "permissions" in permissions
         assert permissions["user_id"] == "user-003"
-

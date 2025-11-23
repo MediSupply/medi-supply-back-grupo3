@@ -3,11 +3,11 @@ Tests unitarios para ProductoMapper
 """
 
 from datetime import datetime
-import pytest
 
+import pytest
+from src.aplicacion.dtos.producto_dto import ProductoDto
 from src.aplicacion.mappers.producto_mapper import ProductoMapper
 from src.dominio.entities.producto import Producto
-from src.aplicacion.dtos.producto_dto import ProductoDto
 
 
 class TestProductoMapper:
@@ -119,4 +119,3 @@ class TestProductoMapper:
         json_data = ProductoMapper.dto_to_json(dto)
         assert json_data["id"] == "prod-999"
         assert json_data["categoria"] == "deportes"
-

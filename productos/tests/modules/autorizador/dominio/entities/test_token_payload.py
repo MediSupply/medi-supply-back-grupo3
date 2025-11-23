@@ -3,8 +3,8 @@ Tests unitarios para TokenPayload
 """
 
 from datetime import datetime, timedelta
-import pytest
 
+import pytest
 from src.modules.autorizador.dominio.entities.token_payload import Role, TokenPayload
 
 
@@ -56,7 +56,7 @@ class TestTokenPayload:
         """Test de creación desde diccionario"""
         exp_timestamp = int((datetime.utcnow() + timedelta(hours=1)).timestamp())
         iat_timestamp = int(datetime.utcnow().timestamp())
-        
+
         data = {
             "user_id": "user-001",
             "role": "ADMIN",
@@ -74,7 +74,7 @@ class TestTokenPayload:
     def test_token_payload_from_dict_lowercase_role(self):
         """Test de creación desde diccionario con rol en minúsculas"""
         exp_timestamp = int((datetime.utcnow() + timedelta(hours=1)).timestamp())
-        
+
         data = {
             "user_id": "user-002",
             "role": "user",  # minúsculas
@@ -88,7 +88,7 @@ class TestTokenPayload:
     def test_token_payload_from_dict_without_iat(self):
         """Test de creación desde diccionario sin iat"""
         exp_timestamp = int((datetime.utcnow() + timedelta(hours=1)).timestamp())
-        
+
         data = {
             "user_id": "user-003",
             "role": "VIEWER",
@@ -159,7 +159,7 @@ class TestTokenPayload:
     def test_token_payload_different_roles(self):
         """Test de diferentes roles"""
         roles = [Role.ADMIN, Role.MANAGER, Role.USER, Role.VIEWER]
-        
+
         for role in roles:
             payload = TokenPayload(
                 user_id="user-001",
@@ -168,4 +168,3 @@ class TestTokenPayload:
             )
             assert payload.role == role
             assert payload.has_role(role) is True
-

@@ -4,16 +4,16 @@ Tests unitarios para ProductoCmd
 
 from datetime import datetime
 from unittest.mock import MagicMock, patch
-import pytest
 
-from src.infraestructura.cmd.producto_cmd import ProductoCmd
+import pytest
 from src.dominio.entities.producto import Producto
+from src.infraestructura.cmd.producto_cmd import ProductoCmd
 
 
 class TestProductoCmd:
     """Tests para ProductoCmd"""
 
-    @patch('src.infraestructura.cmd.producto_cmd.ProductoMapper')
+    @patch("src.infraestructura.cmd.producto_cmd.ProductoMapper")
     def test_obtener_todos_los_productos_exitoso(self, mock_mapper, app_context):
         """Test de obtener todos los productos exitosamente"""
         # Arrange
@@ -34,12 +34,12 @@ class TestProductoCmd:
             ),
         ]
         mock_use_case.obtener_todos_los_productos.return_value = productos
-        
+
         mock_dto = MagicMock()
         mock_json = {"id": "prod-001", "nombre": "Producto 1"}
         mock_mapper.entity_to_dto.return_value = mock_dto
         mock_mapper.dto_to_json.return_value = mock_json
-        
+
         cmd = ProductoCmd(mock_use_case)
 
         # Act
@@ -63,7 +63,7 @@ class TestProductoCmd:
         assert status_code == 500
         assert "error" in response.get_json()
 
-    @patch('src.infraestructura.cmd.producto_cmd.ProductoMapper')
+    @patch("src.infraestructura.cmd.producto_cmd.ProductoMapper")
     def test_obtener_producto_por_id_exitoso(self, mock_mapper, app_context):
         """Test de obtener producto por ID exitosamente"""
         # Arrange
@@ -82,12 +82,12 @@ class TestProductoCmd:
             id_proveedor="prov-001",
         )
         mock_use_case.obtener_producto_por_id.return_value = producto
-        
+
         mock_dto = MagicMock()
         mock_json = {"id": "prod-001", "nombre": "Producto 1"}
         mock_mapper.entity_to_dto.return_value = mock_dto
         mock_mapper.dto_to_json.return_value = mock_json
-        
+
         cmd = ProductoCmd(mock_use_case)
 
         # Act
@@ -126,7 +126,7 @@ class TestProductoCmd:
         assert status_code == 500
         assert "error" in response.get_json()
 
-    @patch('src.infraestructura.cmd.producto_cmd.ProductoMapper')
+    @patch("src.infraestructura.cmd.producto_cmd.ProductoMapper")
     def test_obtener_productos_por_categoria_exitoso(self, mock_mapper, app_context):
         """Test de obtener productos por categoría exitosamente"""
         # Arrange
@@ -147,12 +147,12 @@ class TestProductoCmd:
             ),
         ]
         mock_use_case.obtener_productos_por_categoria.return_value = productos
-        
+
         mock_dto = MagicMock()
         mock_json = {"id": "prod-001", "nombre": "Laptop"}
         mock_mapper.entity_to_dto.return_value = mock_dto
         mock_mapper.dto_to_json.return_value = mock_json
-        
+
         cmd = ProductoCmd(mock_use_case)
 
         # Act
@@ -176,7 +176,7 @@ class TestProductoCmd:
         assert status_code == 500
         assert "error" in response.get_json()
 
-    @patch('src.infraestructura.cmd.producto_cmd.ProductoMapper')
+    @patch("src.infraestructura.cmd.producto_cmd.ProductoMapper")
     def test_buscar_productos_por_nombre_exitoso(self, mock_mapper, app_context):
         """Test de buscar productos por nombre exitosamente"""
         # Arrange
@@ -197,12 +197,12 @@ class TestProductoCmd:
             ),
         ]
         mock_use_case.buscar_productos_por_nombre.return_value = productos
-        
+
         mock_dto = MagicMock()
         mock_json = {"id": "prod-001", "nombre": "Laptop Gaming"}
         mock_mapper.entity_to_dto.return_value = mock_dto
         mock_mapper.dto_to_json.return_value = mock_json
-        
+
         cmd = ProductoCmd(mock_use_case)
 
         # Act
@@ -225,4 +225,3 @@ class TestProductoCmd:
         # Assert
         assert status_code == 500
         assert "error" in response.get_json()
-
